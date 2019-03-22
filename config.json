@@ -1,0 +1,12 @@
+{
+  "database": {
+    "mongodb": {
+      "host": "localhost",
+      "port": ":27017",
+      "username": "",
+      "password": ""
+    }
+  },
+  "jwtSecret": "RfEAsQLOMCriHVKxovDAFk2LdYr0rSFJE5nOjC3xUTofDHprukQ8YNIJGJAPf27",
+  "port": ":9001"
+}
