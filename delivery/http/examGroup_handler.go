@@ -5,26 +5,25 @@ import (
 	"strconv"
 
 	"github.com/haffjjj/uji-backend/models"
-	"github.com/haffjjj/uji-backend/usecase/course"
+	"github.com/haffjjj/uji-backend/usecase/examgroup"
 	"github.com/labstack/echo"
 )
 
-type courseHandler struct {
-	cUsecase course.Usecase
+//examGroupHandler represent handler for course
+type examGroupHandler struct {
+	eGUsecase examgroup.Usecase
 }
 
-//NewTagHandler represent initialization courseHandler
-func NewTagHandler(e *echo.Echo, cU course.Usecase) {
-	handler := &courseHandler{cU}
+//NewExamGroupHandler represent initialization courseHandler
+func NewExamGroupHandler(e *echo.Echo, eGU examgroup.Usecase) {
+	handler := &examGroupHandler{eGU}
 
-	c := e.Group("/courses")
+	c := e.Group("/examGroups")
 
 	c.GET("", handler.FetchG)
 }
 
-//FetchG is method from courseHandler
-func (cH *courseHandler) FetchG(eC echo.Context) error {
-
+func (eGH *examGroupHandler) FetchG(eC echo.Context) error {
 	filter := models.Filter{Start: 0, Limit: 100}
 
 	if startP, ok := eC.QueryParams()["start"]; ok {
@@ -43,10 +42,13 @@ func (cH *courseHandler) FetchG(eC echo.Context) error {
 		filter.Limit = limit
 	}
 
-	courseGs, err := cH.cUsecase.FetchG(filter)
+	if courseIDP, ok := eC.QueryParams()["course"]; ok {
+		filter.CourseID = courseIDP[0]
+	}
 
+	courseGs, err := eGH.eGUsecase.FetchG(filter)
 	if err != nil {
-		eC.JSON(http.StatusInternalServerError, "Error")
+		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
 	return eC.JSON(http.StatusOK, courseGs)

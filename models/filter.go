@@ -5,6 +5,6 @@ type Filter struct {
 	Start     int
 	Limit     int
 	Grade     int
-	examGroup string
-	course    string
+	ExamGroup string
+	CourseID  string
 }
