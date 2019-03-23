@@ -2,24 +2,24 @@ package exam
 
 import (
 	"github.com/haffjjj/uji-backend/models"
-	"github.com/haffjjj/uji-backend/repository/course"
+	"github.com/haffjjj/uji-backend/repository/exam"
 )
 
-type courseUsecase struct {
-	cRepository course.Repository
+type examUsecase struct {
+	eRepository exam.Repository
 }
 
-//NewCourseUsecase represent initializatin courseUsecase
-func NewCourseUsecase(cR course.Repository) Usecase {
-	return &courseUsecase{cR}
+//NewExamUsecase represent initializatin courseUsecase
+func NewExamUsecase(eR exam.Repository) Usecase {
+	return &examUsecase{eR}
 }
 
-func (c *courseUsecase) FetchG(filter models.Filter) ([]*models.CourseG, error) {
-	courseGs, err := c.cRepository.FetchG(filter)
+func (eU *examUsecase) FetchG(filter models.Filter) ([]*models.ExamG, error) {
+	examsGs, err := eU.eRepository.FetchG(filter)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return courseGs, nil
+	return examsGs, nil
 }

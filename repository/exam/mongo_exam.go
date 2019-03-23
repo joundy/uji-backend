@@ -8,18 +8,18 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
-type mongoCourseRepository struct {
+type mongoExamRepository struct {
 	mgoClient *mongo.Client
 }
 
 //NewMongoCourseRepository represent initialization mongoCourseRepository
-func NewMongoCourseRepository(c *mongo.Client) Repository {
-	return &mongoCourseRepository{c}
+func NewMongoExamRepository(c *mongo.Client) Repository {
+	return &mongoExamRepository{c}
 }
 
-func (m *mongoCourseRepository) FetchG(mF models.Filter) ([]*models.CourseG, error) {
-	collection := m.mgoClient.Database("uji").Collection("courses")
-	var courseG []*models.CourseG
+func (m *mongoExamRepository) FetchG(mF models.Filter) ([]*models.ExamG, error) {
+	collection := m.mgoClient.Database("uji").Collection("exams")
+	var examGs []*models.ExamG
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
 		bson.D{
@@ -64,12 +64,12 @@ func (m *mongoCourseRepository) FetchG(mF models.Filter) ([]*models.CourseG, err
 
 	for cur.Next(context.TODO()) {
 
-		var elem models.CourseG
+		var elem models.ExamG
 		err := cur.Decode(&elem)
 		if err != nil {
 			return nil, err
 		}
-		courseG = append(courseG, &elem)
+		examGs = append(examGs, &elem)
 	}
 
 	if err := cur.Err(); err != nil {
@@ -78,9 +78,9 @@ func (m *mongoCourseRepository) FetchG(mF models.Filter) ([]*models.CourseG, err
 
 	cur.Close(context.TODO())
 
-	if courseG == nil {
-		return []*models.CourseG{}, nil
+	if examGs == nil {
+		return []*models.ExamG{}, nil
 	}
 
-	return courseG, nil
+	return examGs, nil
 }

@@ -14,8 +14,10 @@ import (
 
 	_httpDelivery "github.com/haffjjj/uji-backend/delivery/http"
 	_courseRepo "github.com/haffjjj/uji-backend/repository/course"
+	_examRepo "github.com/haffjjj/uji-backend/repository/exam"
 	_examGroupRepo "github.com/haffjjj/uji-backend/repository/examgroup"
 	_courseUsecase "github.com/haffjjj/uji-backend/usecase/course"
+	_examUsecase "github.com/haffjjj/uji-backend/usecase/exam"
 	_examGroupUsecase "github.com/haffjjj/uji-backend/usecase/examgroup"
 )
 
@@ -59,12 +61,15 @@ func main() {
 
 	courseRepo := _courseRepo.NewMongoCourseRepository(mgoClient)
 	examGroupRepo := _examGroupRepo.NewMongoExamGroupRepository(mgoClient)
+	examRepo := _examRepo.NewMongoExamRepository(mgoClient)
 
 	courseUsecase := _courseUsecase.NewCourseUsecase(courseRepo)
 	examGroupUsecase := _examGroupUsecase.NewExamGroupUsecase(examGroupRepo)
+	examUsecase := _examUsecase.NewExamUsecase(examRepo)
 
 	_httpDelivery.NewTagHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
+	_httpDelivery.NewExamHandler(e, examUsecase)
 
 	// ===========
 
