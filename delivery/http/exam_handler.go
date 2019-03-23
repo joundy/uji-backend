@@ -7,6 +7,7 @@ import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/exam"
 	"github.com/labstack/echo"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 //examGroupHandler represent handler for course
@@ -43,7 +44,11 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 	}
 
 	if examGroupIDP, ok := eC.QueryParams()["examGroup"]; ok {
-		filter.ExamGroupID = examGroupIDP[0]
+		examGroupIDHex, err := primitive.ObjectIDFromHex(examGroupIDP[0])
+		if err != nil {
+			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		}
+		filter.ExamGroupID = examGroupIDHex
 	}
 
 	examsGs, err := eH.eUsecase.FetchG(filter)

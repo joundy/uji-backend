@@ -2,9 +2,10 @@ package examlog
 
 import (
 	"github.com/haffjjj/uji-backend/models"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 //Repository represent course repository contract
 type Repository interface {
-	GetByID(i string) (*models.ExamLog, error)
+	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
 }

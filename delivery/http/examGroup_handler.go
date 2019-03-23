@@ -7,6 +7,7 @@ import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/examgroup"
 	"github.com/labstack/echo"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 //examGroupHandler represent handler for course
@@ -43,15 +44,27 @@ func (eGH *examGroupHandler) FetchG(eC echo.Context) error {
 	}
 
 	if courseIDP, ok := eC.QueryParams()["course"]; ok {
-		filter.CourseID = courseIDP[0]
+		courseIDHex, err := primitive.ObjectIDFromHex(courseIDP[0])
+		if err != nil {
+			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		}
+		filter.CourseID = courseIDHex
 	}
 
 	if classIDP, ok := eC.QueryParams()["class"]; ok {
-		filter.ClassID = classIDP[0]
+		classIDHex, err := primitive.ObjectIDFromHex(classIDP[0])
+		if err != nil {
+			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		}
+		filter.ClassID = classIDHex
 	}
 
 	if levelIDP, ok := eC.QueryParams()["level"]; ok {
-		filter.LevelID = levelIDP[0]
+		levelIDHex, err := primitive.ObjectIDFromHex(levelIDP[0])
+		if err != nil {
+			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		}
+		filter.LevelID = levelIDHex
 	}
 
 	courseGs, err := eGH.eGUsecase.FetchG(filter)

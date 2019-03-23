@@ -3,6 +3,7 @@ package examlog
 import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/repository/examlog"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 type examLogUsecase struct {
@@ -14,7 +15,7 @@ func NewExamLogUsecase(cR examlog.Repository) Usecase {
 	return &examLogUsecase{cR}
 }
 
-func (c *examLogUsecase) GetByID(i string) (*models.ExamLog, error) {
+func (c *examLogUsecase) GetByID(i primitive.ObjectID) (*models.ExamLog, error) {
 	examLog, err := c.eLRepository.GetByID(i)
 
 	if err != nil {

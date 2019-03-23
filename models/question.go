@@ -13,9 +13,10 @@ type Question struct {
 
 //ListAnswer is represent model for List data
 type ListAnswer struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
-	Title       string             `json:"title" bson:"title"`
-	Description string             `json:"description" bson:"description"`
+	ID         primitive.ObjectID `json:"id" bson:"_id"`
+	Title      string             `json:"title" bson:"title"`
+	IsCorrect  bool               `json:"isCorrect" bson:"isCorrect"`
+	IsSelected bool               `json:"isSelected" bson:"isSelected"`
 }
 
 //QuestionG is represent model for QuestionG data

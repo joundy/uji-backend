@@ -6,6 +6,7 @@ import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/examlog"
 	"github.com/labstack/echo"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 type examLogHandler struct {
@@ -27,7 +28,14 @@ func (eGH *examLogHandler) Generate(eC echo.Context) error {
 }
 
 func (eGH *examLogHandler) GetByID(eC echo.Context) error {
-	examLog, err := eGH.eGUsecase.GetByID("sdf")
+
+	IDP := eC.Param("id")
+	IDHex, err := primitive.ObjectIDFromHex(IDP)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	examLog, err := eGH.eGUsecase.GetByID(IDHex)
 
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})

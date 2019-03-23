@@ -1,8 +1,11 @@
 package examlog
 
-import "github.com/haffjjj/uji-backend/models"
+import (
+	"github.com/haffjjj/uji-backend/models"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
+)
 
 //Usecase represent course usecase contract
 type Usecase interface {
-	GetByID(i string) (*models.ExamLog, error)
+	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
 }

@@ -22,13 +22,11 @@ func (m *mongoExamRepository) FetchG(mF models.Filter) ([]*models.ExamG, error) 
 	collection := m.mgoClient.Database("uji").Collection("exams")
 	var examGs []*models.ExamG
 
+	var zHex primitive.ObjectID
+
 	fBExamGroupId := bson.D{{"$match", bson.D{}}}
-	if mF.ExamGroupID != "" {
-		ExamGroupIDHex, err := primitive.ObjectIDFromHex(mF.ExamGroupID)
-		if err != nil {
-			return nil, err
-		}
-		fBExamGroupId = bson.D{{"$match", bson.D{{"examGroupId", ExamGroupIDHex}}}}
+	if mF.ExamGroupID != zHex {
+		fBExamGroupId = bson.D{{"$match", bson.D{{"examGroupId", mF.ExamGroupID}}}}
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{

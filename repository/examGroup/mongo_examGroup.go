@@ -22,31 +22,21 @@ func (m *mongoExamGroupRepository) FetchG(mF models.Filter) ([]*models.ExamGroup
 	collection := m.mgoClient.Database("uji").Collection("examGroups")
 	var examGroupGs []*models.ExamGroupG
 
+	var zHex primitive.ObjectID
+
 	fBCourseId := bson.D{{"$match", bson.D{}}}
-	if mF.CourseID != "" {
-		CourseIDHex, err := primitive.ObjectIDFromHex(mF.CourseID)
-		if err != nil {
-			return nil, err
-		}
-		fBCourseId = bson.D{{"$match", bson.D{{"courseId", CourseIDHex}}}}
+	if mF.CourseID != zHex {
+		fBCourseId = bson.D{{"$match", bson.D{{"courseId", mF.CourseID}}}}
 	}
 
 	fBLevelId := bson.D{{"$match", bson.D{}}}
-	if mF.LevelID != "" {
-		LevelIDHex, err := primitive.ObjectIDFromHex(mF.LevelID)
-		if err != nil {
-			return nil, err
-		}
-		fBLevelId = bson.D{{"$match", bson.D{{"levelId", LevelIDHex}}}}
+	if mF.LevelID != zHex {
+		fBLevelId = bson.D{{"$match", bson.D{{"levelId", mF.LevelID}}}}
 	}
 
 	fBClassId := bson.D{{"$match", bson.D{}}}
-	if mF.ClassID != "" {
-		ClassIDHex, err := primitive.ObjectIDFromHex(mF.ClassID)
-		if err != nil {
-			return nil, err
-		}
-		fBClassId = bson.D{{"$match", bson.D{{"classId", ClassIDHex}}}}
+	if mF.ClassID != zHex {
+		fBClassId = bson.D{{"$match", bson.D{{"classId", mF.ClassID}}}}
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
