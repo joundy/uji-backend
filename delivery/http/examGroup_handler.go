@@ -46,6 +46,14 @@ func (eGH *examGroupHandler) FetchG(eC echo.Context) error {
 		filter.CourseID = courseIDP[0]
 	}
 
+	if classIDP, ok := eC.QueryParams()["class"]; ok {
+		filter.ClassID = classIDP[0]
+	}
+
+	if levelIDP, ok := eC.QueryParams()["level"]; ok {
+		filter.LevelID = levelIDP[0]
+	}
+
 	courseGs, err := eGH.eGUsecase.FetchG(filter)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})

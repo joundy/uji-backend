@@ -22,18 +22,74 @@ func (m *mongoExamGroupRepository) FetchG(mF models.Filter) ([]*models.ExamGroup
 	collection := m.mgoClient.Database("uji").Collection("examGroups")
 	var examGroupGs []*models.ExamGroupG
 
-	filterByCourseId := bson.D{{"$match", bson.D{}}}
-
+	fBCourseId := bson.D{{"$match", bson.D{}}}
 	if mF.CourseID != "" {
 		CourseIDHex, err := primitive.ObjectIDFromHex(mF.CourseID)
 		if err != nil {
 			return nil, err
 		}
-		filterByCourseId = bson.D{{"$match", bson.D{{"courseId", CourseIDHex}}}}
+		fBCourseId = bson.D{{"$match", bson.D{{"courseId", CourseIDHex}}}}
+	}
+
+	fBLevelId := bson.D{{"$match", bson.D{}}}
+	if mF.LevelID != "" {
+		LevelIDHex, err := primitive.ObjectIDFromHex(mF.LevelID)
+		if err != nil {
+			return nil, err
+		}
+		fBLevelId = bson.D{{"$match", bson.D{{"levelId", LevelIDHex}}}}
+	}
+
+	fBClassId := bson.D{{"$match", bson.D{}}}
+	if mF.ClassID != "" {
+		ClassIDHex, err := primitive.ObjectIDFromHex(mF.ClassID)
+		if err != nil {
+			return nil, err
+		}
+		fBClassId = bson.D{{"$match", bson.D{{"classId", ClassIDHex}}}}
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
-		filterByCourseId,
+		fBCourseId,
+		fBLevelId,
+		fBClassId,
+		// bson.D{
+		// 	{"$lookup", bson.D{
+		// 		{"from", "courses"},
+		// 		{"localField", "courseId"},
+		// 		{"foreignField", "_id"},
+		// 		{"as", "course"},
+		// 	}},
+		// },
+		// bson.D{
+		// 	{"$lookup", bson.D{
+		// 		{"from", "levels"},
+		// 		{"localField", "levelId"},
+		// 		{"foreignField", "_id"},
+		// 		{"as", "level"},
+		// 	}},
+		// },
+		// bson.D{
+		// 	{"$lookup", bson.D{
+		// 		{"from", "classes"},
+		// 		{"localField", "classId"},
+		// 		{"foreignField", "_id"},
+		// 		{"as", "class"},
+		// 	}},
+		// },
+		// bson.D{
+		// 	{"$addFields", bson.D{
+		// 		{"course", bson.D{
+		// 			{"$arrayElemAt", []interface{}{"$course", 0}},
+		// 		}},
+		// 		{"level", bson.D{
+		// 			{"$arrayElemAt", []interface{}{"$level", 0}},
+		// 		}},
+		// 		{"class", bson.D{
+		// 			{"$arrayElemAt", []interface{}{"$class", 0}},
+		// 		}},
+		// 	}},
+		// },
 		bson.D{
 			{"$group", bson.D{
 				{"_id", nil},
