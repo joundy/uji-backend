@@ -13,8 +13,8 @@ type courseHandler struct {
 	cUsecase course.Usecase
 }
 
-//NewTagHandler represent initialization courseHandler
-func NewTagHandler(e *echo.Echo, cU course.Usecase) {
+//NewCourseHandler represent initialization courseHandler
+func NewCourseHandler(e *echo.Echo, cU course.Usecase) {
 	handler := &courseHandler{cU}
 
 	c := e.Group("/courses")

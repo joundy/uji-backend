@@ -67,7 +67,7 @@ func main() {
 	examGroupUsecase := _examGroupUsecase.NewExamGroupUsecase(examGroupRepo)
 	examUsecase := _examUsecase.NewExamUsecase(examRepo)
 
-	_httpDelivery.NewTagHandler(e, courseUsecase)
+	_httpDelivery.NewCourseHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
 	_httpDelivery.NewExamHandler(e, examUsecase)
 
