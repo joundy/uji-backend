@@ -13,12 +13,16 @@ import (
 	"github.com/spf13/viper"
 
 	_httpDelivery "github.com/haffjjj/uji-backend/delivery/http"
+
 	_courseRepo "github.com/haffjjj/uji-backend/repository/course"
 	_examRepo "github.com/haffjjj/uji-backend/repository/exam"
 	_examGroupRepo "github.com/haffjjj/uji-backend/repository/examgroup"
+	_examLogRepo "github.com/haffjjj/uji-backend/repository/examlog"
+
 	_courseUsecase "github.com/haffjjj/uji-backend/usecase/course"
 	_examUsecase "github.com/haffjjj/uji-backend/usecase/exam"
 	_examGroupUsecase "github.com/haffjjj/uji-backend/usecase/examgroup"
+	_examLogUsecase "github.com/haffjjj/uji-backend/usecase/examlog"
 )
 
 func init() {
@@ -62,15 +66,17 @@ func main() {
 	courseRepo := _courseRepo.NewMongoCourseRepository(mgoClient)
 	examGroupRepo := _examGroupRepo.NewMongoExamGroupRepository(mgoClient)
 	examRepo := _examRepo.NewMongoExamRepository(mgoClient)
+	examLog := _examLogRepo.NewMongoExamLogRepository(mgoClient)
 
 	courseUsecase := _courseUsecase.NewCourseUsecase(courseRepo)
 	examGroupUsecase := _examGroupUsecase.NewExamGroupUsecase(examGroupRepo)
 	examUsecase := _examUsecase.NewExamUsecase(examRepo)
+	examLogUsecase := _examLogUsecase.NewExamLogUsecase(examLog)
 
 	_httpDelivery.NewCourseHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
 	_httpDelivery.NewExamHandler(e, examUsecase)
-	_httpDelivery.NewExamLogHandler(e)
+	_httpDelivery.NewExamLogHandler(e, examLogUsecase)
 
 	// ===========
 
