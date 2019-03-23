@@ -70,6 +70,7 @@ func main() {
 	_httpDelivery.NewCourseHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
 	_httpDelivery.NewExamHandler(e, examUsecase)
+	_httpDelivery.NewExamLogHandler(e)
 
 	// ===========
 
