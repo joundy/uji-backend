@@ -5,6 +5,7 @@ import (
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
@@ -12,7 +13,7 @@ type mongoExamRepository struct {
 	mgoClient *mongo.Client
 }
 
-//NewMongoCourseRepository represent initialization mongoCourseRepository
+//NewMongoExamRepository represent initialization mongoCourseRepository
 func NewMongoExamRepository(c *mongo.Client) Repository {
 	return &mongoExamRepository{c}
 }
@@ -21,7 +22,17 @@ func (m *mongoExamRepository) FetchG(mF models.Filter) ([]*models.ExamG, error) 
 	collection := m.mgoClient.Database("uji").Collection("exams")
 	var examGs []*models.ExamG
 
+	fBExamGroupId := bson.D{{"$match", bson.D{}}}
+	if mF.ExamGroupID != "" {
+		ExamGroupIDHex, err := primitive.ObjectIDFromHex(mF.ExamGroupID)
+		if err != nil {
+			return nil, err
+		}
+		fBExamGroupId = bson.D{{"$match", bson.D{{"examGroupId", ExamGroupIDHex}}}}
+	}
+
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
+		fBExamGroupId,
 		bson.D{
 			{"$group", bson.D{
 				{"_id", nil},

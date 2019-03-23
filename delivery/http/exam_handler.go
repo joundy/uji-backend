@@ -42,9 +42,9 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 		filter.Limit = limit
 	}
 
-	// if courseIDP, ok := eC.QueryParams()["course"]; ok {
-	// 	filter.CourseID = courseIDP[0]
-	// }
+	if examGroupIDP, ok := eC.QueryParams()["examGroup"]; ok {
+		filter.ExamGroupID = examGroupIDP[0]
+	}
 
 	examsGs, err := eH.eUsecase.FetchG(filter)
 	if err != nil {

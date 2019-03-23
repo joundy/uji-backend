@@ -46,7 +46,7 @@ func (cH *courseHandler) FetchG(eC echo.Context) error {
 	courseGs, err := cH.cUsecase.FetchG(filter)
 
 	if err != nil {
-		eC.JSON(http.StatusInternalServerError, "Error")
+		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
 	return eC.JSON(http.StatusOK, courseGs)
