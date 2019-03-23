@@ -24,3 +24,10 @@ func (c *examLogUsecase) GetByID(i primitive.ObjectID) (*models.ExamLog, error) 
 
 	return examLog, nil
 }
+
+func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
+
+	// fmt.Println(userID, examID)
+
+	return nil
+}

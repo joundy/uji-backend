@@ -8,4 +8,5 @@ import (
 //Usecase represent course usecase contract
 type Usecase interface {
 	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
+	Generate(userID, examID primitive.ObjectID) error
 }
