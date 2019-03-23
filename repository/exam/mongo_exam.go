@@ -18,6 +18,19 @@ func NewMongoExamRepository(c *mongo.Client) Repository {
 	return &mongoExamRepository{c}
 }
 
+func (m *mongoExamRepository) GetByID(i primitive.ObjectID) (*models.Exam, error) {
+	collection := m.mgoClient.Database("uji").Collection("exams")
+	var exam models.Exam
+
+	err := collection.FindOne(context.TODO(), bson.D{{"_id", i}}).Decode(&exam)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &exam, nil
+}
+
 func (m *mongoExamRepository) FetchG(mF models.Filter) ([]*models.ExamG, error) {
 	collection := m.mgoClient.Database("uji").Collection("exams")
 	var examGs []*models.ExamG

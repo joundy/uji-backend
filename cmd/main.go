@@ -18,6 +18,7 @@ import (
 	_examRepo "github.com/haffjjj/uji-backend/repository/exam"
 	_examGroupRepo "github.com/haffjjj/uji-backend/repository/examgroup"
 	_examLogRepo "github.com/haffjjj/uji-backend/repository/examlog"
+	_questionRepo "github.com/haffjjj/uji-backend/repository/question"
 
 	_courseUsecase "github.com/haffjjj/uji-backend/usecase/course"
 	_examUsecase "github.com/haffjjj/uji-backend/usecase/exam"
@@ -66,12 +67,13 @@ func main() {
 	courseRepo := _courseRepo.NewMongoCourseRepository(mgoClient)
 	examGroupRepo := _examGroupRepo.NewMongoExamGroupRepository(mgoClient)
 	examRepo := _examRepo.NewMongoExamRepository(mgoClient)
-	examLog := _examLogRepo.NewMongoExamLogRepository(mgoClient)
+	examLogRepo := _examLogRepo.NewMongoExamLogRepository(mgoClient)
+	questionRepo := _questionRepo.NewMongoQuestionRepository(mgoClient)
 
 	courseUsecase := _courseUsecase.NewCourseUsecase(courseRepo)
 	examGroupUsecase := _examGroupUsecase.NewExamGroupUsecase(examGroupRepo)
 	examUsecase := _examUsecase.NewExamUsecase(examRepo)
-	examLogUsecase := _examLogUsecase.NewExamLogUsecase(examLog)
+	examLogUsecase := _examLogUsecase.NewExamLogUsecase(examLogRepo, examRepo, questionRepo)
 
 	_httpDelivery.NewCourseHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
