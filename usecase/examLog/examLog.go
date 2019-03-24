@@ -50,7 +50,15 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	questionG := questionGs[0]
 	qDataRaw := questionG.Data
 
-	shuffleQuestions(&qDataRaw)
+	fmt.Println(exam.IsRandom)
+
+	if exam.IsRandom == true {
+		shuffleQuestions(&qDataRaw)
+	}
+
+	if exam.MaxQuestion > len(qDataRaw) {
+		exam.MaxQuestion = len(qDataRaw)
+	}
 
 	examLog := models.ExamLog{
 		UserID: userID,
@@ -65,7 +73,7 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 		StartTime: time.Now(),
 		EndTime:   time.Now().Add(time.Second * time.Duration(exam.Duration)),
 		IsSubmit:  false,
-		Questions: qDataRaw,
+		Questions: qDataRaw[:exam.MaxQuestion],
 	}
 
 	fmt.Println(examLog)

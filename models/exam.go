@@ -12,7 +12,7 @@ type Exam struct {
 	Description  string             `json:"description" bson:"description"`
 	Duration     int                `json:"duration" bson:"duration"`
 	Source       string             `json:"source" bson:"source"`
-	IsRandom     bool               `json:"-" bson:"deadline"`
+	IsRandom     bool               `json:"-" bson:"isRandom"`
 	MaxQuestion  int                `json:"-" bson:"maxQuestion"`
 	Point        int                `json:"point" bson:"point"`
 	PassingGrade int                `json:"passingGrade" bson:"passingGrade"`
