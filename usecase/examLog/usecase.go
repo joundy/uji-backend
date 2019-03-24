@@ -9,4 +9,5 @@ import (
 type Usecase interface {
 	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
 	Generate(userID, examID primitive.ObjectID) error
+	FetchG(models.Filter) ([]*models.ExamLogG, error)
 }

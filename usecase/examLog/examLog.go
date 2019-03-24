@@ -68,8 +68,6 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 			Point:        exam.Point,
 			PassingGrade: exam.PassingGrade,
 		},
-		StartTime: time.Now(),
-		EndTime:   time.Now().Add(time.Second * time.Duration(exam.Duration)),
 		IsSubmit:  false,
 		Questions: qDataRaw[:exam.MaxQuestion],
 	}
@@ -80,6 +78,16 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	}
 
 	return nil
+}
+
+func (c *examLogUsecase) FetchG(f models.Filter) ([]*models.ExamLogG, error) {
+	examLogGs, err := c.eLRepository.FetchG(f)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return examLogGs, nil
 }
 
 func shuffleQuestions(q *[]models.Question) {

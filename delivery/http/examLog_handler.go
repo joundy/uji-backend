@@ -21,6 +21,42 @@ func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 
 	g.POST("/generate", handler.Generate)
 	g.GET("/:id", handler.GetByID)
+	g.GET("", handler.FetchG)
+}
+
+func (eGH *examLogHandler) FetchG(eC echo.Context) error {
+	mF := models.Filter{Start: 0, Limit: 100}
+
+	// if startP, ok := eC.QueryParams()["start"]; ok {
+	// 	start, err := strconv.Atoi(startP[0])
+	// 	if err != nil {
+	// 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	// 	}
+	// 	filter.Start = start
+	// }
+
+	// if limitP, ok := eC.QueryParams()["limit"]; ok {
+	// 	limit, err := strconv.Atoi(limitP[0])
+	// 	if err != nil {
+	// 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	// 	}
+	// 	filter.Limit = limit
+	// }
+
+	// if examGroupIDP, ok := eC.QueryParams()["examGroup"]; ok {
+	// 	examGroupIDHex, err := primitive.ObjectIDFromHex(examGroupIDP[0])
+	// 	if err != nil {
+	// 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	// 	}
+	// 	filter.ExamGroupID = examGroupIDHex
+	// }
+
+	examLogGs, err := eGH.eGUsecase.FetchG(mF)
+	if err != nil {
+		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusOK, examLogGs)
 }
 
 func (eGH *examLogHandler) Generate(eC echo.Context) error {

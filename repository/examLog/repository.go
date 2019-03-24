@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
 	Store(e *models.ExamLog) error
+	FetchG(models.Filter) ([]*models.ExamLogG, error)
 }

@@ -37,6 +37,6 @@ type ExamLogExam struct {
 
 //ExamLogG is represent model for ExamLogG data
 type ExamLogG struct {
-	Data  []Class `json:"data" bson:"data"`
-	Count int     `json:"count" bson:"count"`
+	Data  []ExamLog `json:"data" bson:"data"`
+	Count int       `json:"count" bson:"count"`
 }
