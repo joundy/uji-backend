@@ -8,4 +8,5 @@ import (
 //Repository represent course repository contract
 type Repository interface {
 	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
+	Store(e *models.ExamLog) error
 }

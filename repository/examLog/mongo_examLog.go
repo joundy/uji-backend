@@ -31,3 +31,14 @@ func (m *mongoExamLogRepository) GetByID(i primitive.ObjectID) (*models.ExamLog,
 
 	return &examLog, nil
 }
+
+func (m *mongoExamLogRepository) Store(e *models.ExamLog) error {
+	collection := m.mgoClient.Database("uji").Collection("examLogs")
+
+	_, err := collection.InsertOne(context.TODO(), e)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -6,7 +6,7 @@ import (
 
 //Question is represent model for Question data
 type Question struct {
-	ID      primitive.ObjectID `json:"id" bson:"_id"`
+	ID      primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Title   string             `json:"title" bson:"title"`
 	Answers []ListAnswer       `json:"anwers" bson:"answers"`
 }

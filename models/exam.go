@@ -6,7 +6,7 @@ import (
 
 //Exam is represent model for course data
 type Exam struct {
-	ID           primitive.ObjectID `json:"id" bson:"_id"`
+	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	ExamGroupID  primitive.ObjectID `json:"examGroupId" bson:"examGroupId"`
 	Title        string             `json:"title" bson:"title"`
 	Description  string             `json:"description" bson:"description"`

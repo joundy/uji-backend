@@ -6,7 +6,7 @@ import (
 
 //Course is represent model for course data
 type Course struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Title       string             `json:"title" bson:"title"`
 	Description string             `json:"description" bson:"description"`
 	// Deadline    time.Time `json:"deadline" bson:"deadline"`

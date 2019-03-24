@@ -8,7 +8,7 @@ import (
 
 //ExamLog is represent model for ExamLog data
 type ExamLog struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	UserID    primitive.ObjectID `json:"userId" bson:"userId"`
 	ExamID    primitive.ObjectID `json:"examId" bson:"examId"`
 	Exam      ExamLogExam        `json:"exam" bson:"exam"`

@@ -1,7 +1,6 @@
 package examlog
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -50,8 +49,6 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	questionG := questionGs[0]
 	qDataRaw := questionG.Data
 
-	fmt.Println(exam.IsRandom)
-
 	if exam.IsRandom == true {
 		shuffleQuestions(&qDataRaw)
 	}
@@ -62,6 +59,7 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 
 	examLog := models.ExamLog{
 		UserID: userID,
+		ExamID: examID,
 		Exam: models.ExamLogExam{
 			Title:        exam.Title,
 			Description:  exam.Description,
@@ -76,7 +74,10 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 		Questions: qDataRaw[:exam.MaxQuestion],
 	}
 
-	fmt.Println(examLog)
+	err = c.eLRepository.Store(&examLog)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
