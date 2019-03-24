@@ -50,7 +50,7 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	questionG := questionGs[0]
 	qDataRaw := questionG.Data
 
-	randQuestions(&qDataRaw)
+	shuffleQuestions(&qDataRaw)
 
 	examLog := models.ExamLog{
 		UserID: userID,
@@ -73,7 +73,7 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	return nil
 }
 
-func randQuestions(q *[]models.Question) {
+func shuffleQuestions(q *[]models.Question) {
 	rand.Seed(time.Now().UnixNano())
 
 	for i := len(*q) - 1; i >= 0; i-- {
