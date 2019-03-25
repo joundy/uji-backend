@@ -69,6 +69,11 @@ func (m *mongoExamLogRepository) FetchG(mF models.Filter) ([]*models.ExamLogG, e
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
 		bson.D{
+			{"$match", bson.D{
+				{"userId", mF.UserID},
+			}},
+		},
+		bson.D{
 			{"$project", bson.D{
 				{"questions", 0},
 			}},
