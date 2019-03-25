@@ -1,7 +1,7 @@
 package examlog
 
 import (
-	"fmt"
+	"errors"
 	"math/rand"
 	"time"
 
@@ -25,24 +25,44 @@ func NewExamLogUsecase(eLR examlog.Repository, eR exam.Repository, qR question.R
 }
 
 func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
-
-	exam, err := c.eLRepository.GetByID(IDHex)
+	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
 	if err != nil {
 		return err
 	}
 
-	questions := exam.Questions
+	if examLog.IsSubmit == true {
+		return errors.New("exam already submitted")
+	}
 
-	for _, vQ := range questions {
-		fmt.Println(eqAnswers(vQ.Answer.CorrectIds, vQ.Answer.SelectedIds))
+	for _, vQ := range examLog.Questions {
+		if eqAnswers(vQ.Answer.CorrectIds, vQ.Answer.SelectedIds) == true {
+			examLog.Result.Pass++
+		} else {
+			examLog.Result.Failed++
+		}
+	}
+
+	examLog.IsSubmit = true
+
+	err = c.eLRepository.Submit(IDHex, userIDHex, examLog)
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
+	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
+	if err != nil {
+		return err
+	}
 
-	err := c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
+	if examLog.IsSubmit == true {
+		return errors.New("exam already submitted")
+	}
+
+	err = c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
 	if err != nil {
 		return err
 	}
@@ -50,8 +70,8 @@ func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.Ob
 	return nil
 }
 
-func (c *examLogUsecase) GetByID(i *primitive.ObjectID) (*models.ExamLog, error) {
-	examLog, err := c.eLRepository.GetByID(i)
+func (c *examLogUsecase) GetByID(IDHex, userIDHex *primitive.ObjectID) (*models.ExamLog, error) {
+	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
 
 	if err != nil {
 		return nil, err

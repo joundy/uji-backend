@@ -2,7 +2,6 @@ package examlog
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
@@ -19,8 +18,22 @@ func NewMongoExamLogRepository(c *mongo.Client) Repository {
 	return &mongoExamLogRepository{c}
 }
 
-func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID) error {
-	fmt.Println(IDHex, userIDHex)
+func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID, e *models.ExamLog) error {
+	collection := m.mgoClient.Database("uji").Collection("examLogs")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", IDHex},
+		{"userId", userIDHex},
+	}, bson.D{
+		{"$set", bson.D{
+			{"result", e.Result},
+			{"isSubmit", e.IsSubmit},
+		}},
+	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -45,12 +58,12 @@ func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *prim
 	return nil
 }
 
-func (m *mongoExamLogRepository) GetByID(i *primitive.ObjectID) (*models.ExamLog, error) {
+func (m *mongoExamLogRepository) GetByID(IDHex, userIDHex *primitive.ObjectID) (*models.ExamLog, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 
 	var examLog models.ExamLog
 
-	err := collection.FindOne(context.TODO(), bson.D{{"_id", i}}).Decode(&examLog)
+	err := collection.FindOne(context.TODO(), bson.D{{"_id", IDHex}, {"userId", userIDHex}}).Decode(&examLog)
 
 	if err != nil {
 		return nil, err

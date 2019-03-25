@@ -78,7 +78,7 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	return eC.JSON(http.StatusOK, "OK")
+	return eC.JSON(http.StatusNoContent, "")
 }
 
 func (eLH *examLogHandler) GetByID(eC echo.Context) error {
@@ -89,7 +89,12 @@ func (eLH *examLogHandler) GetByID(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	examLog, err := eLH.eGUsecase.GetByID(&IDHex)
+	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	examLog, err := eLH.eGUsecase.GetByID(&IDHex, &userIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -155,5 +160,5 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	return nil
+	return eC.JSON(http.StatusNoContent, "")
 }
