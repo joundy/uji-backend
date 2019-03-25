@@ -18,6 +18,27 @@ func NewMongoExamLogRepository(c *mongo.Client) Repository {
 	return &mongoExamLogRepository{c}
 }
 
+func (m *mongoExamLogRepository) Start(IDHex, userIDHex *primitive.ObjectID, e *models.ExamLog) error {
+	collection := m.mgoClient.Database("uji").Collection("examLogs")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", IDHex},
+		{"userId", userIDHex},
+	}, bson.D{
+		{"$set", bson.D{
+			{"isStart", e.IsSubmit},
+			{"startTime", e.StartTime},
+			{"endTime", e.EndTime},
+		}},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID, e *models.ExamLog) error {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 

@@ -8,15 +8,17 @@ import (
 
 //ExamLog is represent model for ExamLog data
 type ExamLog struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	UserID    primitive.ObjectID `json:"userId" bson:"userId"`
-	ExamID    primitive.ObjectID `json:"examId" bson:"examId"`
-	Exam      ExamLogExam        `json:"exam" bson:"exam"`
-	Questions []Question         `json:"questions,omitempty" bson:"questions"`
-	StartTime time.Time          `json:"startTime" bson:"startTime"`
-	EndTime   time.Time          `json:"endTime" bson:"endTime"`
-	Result    ExamLogResult      `json:"result" bson:"result"`
-	IsSubmit  bool               `json:"isSubmit" bson:"isSubmit"`
+	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	UserID        primitive.ObjectID `json:"userId" bson:"userId"`
+	ExamID        primitive.ObjectID `json:"examId" bson:"examId"`
+	Exam          ExamLogExam        `json:"exam" bson:"exam"`
+	Questions     []Question         `json:"questions,omitempty" bson:"questions"`
+	StartTime     time.Time          `json:"startTime" bson:"startTime"`
+	EndTime       time.Time          `json:"endTime" bson:"endTime"`
+	RemainingTime float64            `json:"remainingTime"`
+	Result        ExamLogResult      `json:"result" bson:"result"`
+	IsStart       bool               `json:"isStart" bson:"isStart"`
+	IsSubmit      bool               `json:"isSubmit" bson:"isSubmit"`
 }
 
 //ExamLogResult is represent model for ExamLogResult data

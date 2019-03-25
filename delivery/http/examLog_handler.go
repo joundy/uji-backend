@@ -21,7 +21,7 @@ func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 	g := e.Group("/examLogs")
 
 	g.POST("/generate", handler.Generate)
-	g.GET("/:id", handler.GetByID)
+	g.GET("/:id", handler.GetByIDAndStart)
 	g.GET("", handler.FetchG)
 	g.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
 	g.POST("/:id/submit", handler.Submit)
@@ -80,7 +80,7 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 	return eC.JSON(http.StatusNoContent, "")
 }
 
-func (eLH *examLogHandler) GetByID(eC echo.Context) error {
+func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
@@ -93,7 +93,7 @@ func (eLH *examLogHandler) GetByID(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	examLog, err := eLH.eGUsecase.GetByID(&IDHex, &userIDHex)
+	examLog, err := eLH.eGUsecase.GetByIDAndStart(&IDHex, &userIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}

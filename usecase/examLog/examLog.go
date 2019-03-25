@@ -34,6 +34,10 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 		return errors.New("exam already submitted")
 	}
 
+	if examLog.IsStart == false {
+		return errors.New("the exam hasn't started yet, please start first")
+	}
+
 	for _, vQ := range examLog.Questions {
 		if eqAnswers(vQ.Answer.CorrectIds, vQ.Answer.SelectedIds) == true {
 			examLog.Result.Pass++
@@ -62,6 +66,14 @@ func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.Ob
 		return errors.New("exam already submitted")
 	}
 
+	if examLog.IsStart == false {
+		return errors.New("the exam hasn't started yet, please start first")
+	}
+
+	if time.Now().Local().Sub(examLog.EndTime).Seconds() >= 0 {
+		return errors.New("timeout, please submit exam..")
+	}
+
 	err = c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
 	if err != nil {
 		return err
@@ -70,12 +82,25 @@ func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.Ob
 	return nil
 }
 
-func (c *examLogUsecase) GetByID(IDHex, userIDHex *primitive.ObjectID) (*models.ExamLog, error) {
+func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (*models.ExamLog, error) {
 	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
-
 	if err != nil {
 		return nil, err
 	}
+
+	if examLog.IsStart == false {
+
+		examLog.IsStart = true
+		examLog.StartTime = time.Now()
+		examLog.EndTime = time.Now().Local().Add(time.Second * time.Duration(examLog.Exam.Duration))
+
+		err = c.eLRepository.Start(IDHex, userIDHex, examLog)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	examLog.RemainingTime = time.Now().Local().Sub(examLog.EndTime).Seconds()
 
 	return examLog, nil
 }
