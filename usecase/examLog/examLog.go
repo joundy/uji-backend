@@ -80,17 +80,21 @@ func (c *examLogUsecase) GetByID(IDHex, userIDHex *primitive.ObjectID) (*models.
 	return examLog, nil
 }
 
-func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
+func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) error {
 
-	exam, err := c.eRepository.GetByID(examID)
+	exam, err := c.eRepository.GetByID(examIDHex)
 	if err != nil {
 		return err
 	}
 
-	filter := models.Filter{Start: 0, Limit: 100}
-	questionGs, err := c.qRepository.FetchG(filter)
+	mF := models.Filter{Start: 0, Limit: 100, ExamID: examIDHex}
+	questionGs, err := c.qRepository.FetchG(mF)
 	if err != nil {
 		return err
+	}
+
+	if len(questionGs) == 0 {
+		return errors.New("No question found")
 	}
 
 	questionG := questionGs[0]
@@ -105,8 +109,8 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	}
 
 	examLog := models.ExamLog{
-		UserID: userID,
-		ExamID: examID,
+		UserID: userIDHex,
+		ExamID: examIDHex,
 		Exam: models.ExamLogExam{
 			Title:        exam.Title,
 			Description:  exam.Description,
@@ -127,8 +131,8 @@ func (c *examLogUsecase) Generate(userID, examID primitive.ObjectID) error {
 	return nil
 }
 
-func (c *examLogUsecase) FetchG(f models.Filter) ([]*models.ExamLogG, error) {
-	examLogGs, err := c.eLRepository.FetchG(f)
+func (c *examLogUsecase) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {
+	examLogGs, err := c.eLRepository.FetchG(userIDHex, mF)
 
 	if err != nil {
 		return nil, err

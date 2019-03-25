@@ -25,14 +25,14 @@ func NewExamHandler(e *echo.Echo, eU exam.Usecase) {
 }
 
 func (eH *examHandler) FetchG(eC echo.Context) error {
-	filter := models.Filter{Start: 0, Limit: 100}
+	mF := models.Filter{Start: 0, Limit: 100}
 
 	if startP, ok := eC.QueryParams()["start"]; ok {
 		start, err := strconv.Atoi(startP[0])
 		if err != nil {
 			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 		}
-		filter.Start = start
+		mF.Start = start
 	}
 
 	if limitP, ok := eC.QueryParams()["limit"]; ok {
@@ -40,7 +40,7 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 		if err != nil {
 			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 		}
-		filter.Limit = limit
+		mF.Limit = limit
 	}
 
 	if examGroupIDP, ok := eC.QueryParams()["examGroup"]; ok {
@@ -48,10 +48,10 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 		if err != nil {
 			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 		}
-		filter.ExamGroupID = examGroupIDHex
+		mF.ExamGroupID = examGroupIDHex
 	}
 
-	examsGs, err := eH.eUsecase.FetchG(filter)
+	examsGs, err := eH.eUsecase.FetchG(mF)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}

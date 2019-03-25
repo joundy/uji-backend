@@ -8,9 +8,9 @@ import (
 type Filter struct {
 	Start       int
 	Limit       int
-	UserID      primitive.ObjectID
 	ClassID     primitive.ObjectID
 	LevelID     primitive.ObjectID
 	ExamGroupID primitive.ObjectID
+	ExamID      primitive.ObjectID
 	CourseID    primitive.ObjectID
 }

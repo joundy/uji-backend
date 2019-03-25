@@ -83,14 +83,14 @@ func (m *mongoExamLogRepository) Store(e *models.ExamLog) error {
 	return nil
 }
 
-func (m *mongoExamLogRepository) FetchG(mF models.Filter) ([]*models.ExamLogG, error) {
+func (m *mongoExamLogRepository) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 	var examLogGs []*models.ExamLogG
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
 		bson.D{
 			{"$match", bson.D{
-				{"userId", mF.UserID},
+				{"userId", userIDHex},
 			}},
 		},
 		bson.D{

@@ -50,9 +50,8 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
-	mF.UserID = userIDHex
 
-	examLogGs, err := eLH.eGUsecase.FetchG(mF)
+	examLogGs, err := eLH.eGUsecase.FetchG(&userIDHex, mF)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
@@ -20,8 +21,15 @@ func NewMongoQuestionRepository(c *mongo.Client) Repository {
 func (m *mongoQuestionRepository) FetchG(mF models.Filter) ([]*models.QuestionG, error) {
 	collection := m.mgoClient.Database("uji").Collection("questions")
 	var questionGs []*models.QuestionG
+	var zHex primitive.ObjectID
+
+	fBExamId := bson.D{{"$match", bson.D{}}}
+	if mF.ExamGroupID != zHex {
+		fBExamId = bson.D{{"$match", bson.D{{"examGroupId", mF.ExamID}}}}
+	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
+		fBExamId,
 		bson.D{
 			{"$group", bson.D{
 				{"_id", nil},

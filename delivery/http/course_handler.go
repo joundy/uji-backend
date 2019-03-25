@@ -25,14 +25,14 @@ func NewCourseHandler(e *echo.Echo, cU course.Usecase) {
 //FetchG is method from courseHandler
 func (cH *courseHandler) FetchG(eC echo.Context) error {
 
-	filter := models.Filter{Start: 0, Limit: 100}
+	mF := models.Filter{Start: 0, Limit: 100}
 
 	if startP, ok := eC.QueryParams()["start"]; ok {
 		start, err := strconv.Atoi(startP[0])
 		if err != nil {
 			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 		}
-		filter.Start = start
+		mF.Start = start
 	}
 
 	if limitP, ok := eC.QueryParams()["limit"]; ok {
@@ -40,10 +40,10 @@ func (cH *courseHandler) FetchG(eC echo.Context) error {
 		if err != nil {
 			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 		}
-		filter.Limit = limit
+		mF.Limit = limit
 	}
 
-	courseGs, err := cH.cUsecase.FetchG(filter)
+	courseGs, err := cH.cUsecase.FetchG(mF)
 
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
