@@ -2,6 +2,7 @@ package examlog
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
@@ -16,6 +17,12 @@ type mongoExamLogRepository struct {
 //NewMongoExamLogRepository represent initialization mongoCourseRepository
 func NewMongoExamLogRepository(c *mongo.Client) Repository {
 	return &mongoExamLogRepository{c}
+}
+
+func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID) error {
+	fmt.Println(IDHex, userIDHex)
+
+	return nil
 }
 
 func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
@@ -38,7 +45,7 @@ func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *prim
 	return nil
 }
 
-func (m *mongoExamLogRepository) GetByID(i primitive.ObjectID) (*models.ExamLog, error) {
+func (m *mongoExamLogRepository) GetByID(i *primitive.ObjectID) (*models.ExamLog, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 
 	var examLog models.ExamLog

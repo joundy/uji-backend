@@ -1,6 +1,7 @@
 package examlog
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -23,6 +24,22 @@ func NewExamLogUsecase(eLR examlog.Repository, eR exam.Repository, qR question.R
 	return &examLogUsecase{eLR, eR, qR}
 }
 
+func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
+
+	exam, err := c.eLRepository.GetByID(IDHex)
+	if err != nil {
+		return err
+	}
+
+	questions := exam.Questions
+
+	for _, vQ := range questions {
+		fmt.Println(eqAnswers(vQ.Answer.CorrectIds, vQ.Answer.SelectedIds))
+	}
+
+	return nil
+}
+
 func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
 
 	err := c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
@@ -33,7 +50,7 @@ func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.Ob
 	return nil
 }
 
-func (c *examLogUsecase) GetByID(i primitive.ObjectID) (*models.ExamLog, error) {
+func (c *examLogUsecase) GetByID(i *primitive.ObjectID) (*models.ExamLog, error) {
 	examLog, err := c.eLRepository.GetByID(i)
 
 	if err != nil {
@@ -108,4 +125,23 @@ func shuffleQuestions(q *[]models.Question) {
 
 		(*q)[i], (*q)[r] = (*q)[r], (*q)[i]
 	}
+}
+
+func eqAnswers(cI, sI []primitive.ObjectID) bool {
+	if len(cI) != len(sI) {
+		return false
+	}
+
+	for iCI := range cI {
+		for _, vSI := range sI {
+			if cI[iCI] == vSI {
+				break
+			}
+			if vSI == sI[len(sI)-1] {
+				return false
+			}
+		}
+	}
+
+	return true
 }

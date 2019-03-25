@@ -8,7 +8,7 @@ import (
 type Question struct {
 	ID     primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Title  string             `json:"title" bson:"title"`
-	Answer Answer             `json:"anwers" bson:"answer"`
+	Answer Answer             `json:"anwer" bson:"answer"`
 }
 
 //Answer is represent model for Answer data

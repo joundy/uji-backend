@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -90,7 +89,7 @@ func (eLH *examLogHandler) GetByID(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	examLog, err := eLH.eGUsecase.GetByID(IDHex)
+	examLog, err := eLH.eGUsecase.GetByID(&IDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -146,7 +145,15 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	fmt.Println(IDHex)
+	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	err = eLH.eGUsecase.Submit(&IDHex, &userIDHex)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
 
 	return nil
 }
