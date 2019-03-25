@@ -23,6 +23,16 @@ func NewExamLogUsecase(eLR examlog.Repository, eR exam.Repository, qR question.R
 	return &examLogUsecase{eLR, eR, qR}
 }
 
+func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
+
+	err := c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *examLogUsecase) GetByID(i primitive.ObjectID) (*models.ExamLog, error) {
 	examLog, err := c.eLRepository.GetByID(i)
 

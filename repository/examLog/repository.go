@@ -10,4 +10,5 @@ type Repository interface {
 	GetByID(i primitive.ObjectID) (*models.ExamLog, error)
 	Store(e *models.ExamLog) error
 	FetchG(models.Filter) ([]*models.ExamLogG, error)
+	SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error
 }

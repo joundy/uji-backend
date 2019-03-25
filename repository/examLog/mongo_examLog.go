@@ -18,6 +18,26 @@ func NewMongoExamLogRepository(c *mongo.Client) Repository {
 	return &mongoExamLogRepository{c}
 }
 
+func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
+	collection := m.mgoClient.Database("uji").Collection("examLogs")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", IDHex},
+		{"userId", userIDHex},
+		{"questions._id", questionIDHex},
+	}, bson.D{
+		{"$set", bson.D{
+			{"questions.$.answer.selectedIds", isSelectedIdsHex},
+		}},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *mongoExamLogRepository) GetByID(i primitive.ObjectID) (*models.ExamLog, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 
@@ -48,6 +68,11 @@ func (m *mongoExamLogRepository) FetchG(mF models.Filter) ([]*models.ExamLogG, e
 	var examLogGs []*models.ExamLogG
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
+		bson.D{
+			{"$project", bson.D{
+				{"questions", 0},
+			}},
+		},
 		bson.D{
 			{"$group", bson.D{
 				{"_id", nil},

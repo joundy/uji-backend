@@ -11,9 +11,8 @@ type ExamGroup struct {
 	LevelID     primitive.ObjectID `json:"-" bson:"levelId"`
 	ClassID     primitive.ObjectID `json:"-" bson:"classId"`
 	Description string             `json:"description" bson:"description"`
-	// Course      Course             `json:"course" bson:"course"`
-	Level Level `json:"level" bson:"level"`
-	Class Class `json:"class" bson:"class"`
+	Level       Level              `json:"level" bson:"level"`
+	Class       Class              `json:"class" bson:"class"`
 }
 
 //ExamGroupG is represent model for ExamGroupGroup data

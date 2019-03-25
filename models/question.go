@@ -6,17 +6,22 @@ import (
 
 //Question is represent model for Question data
 type Question struct {
-	ID      primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Title   string             `json:"title" bson:"title"`
-	Answers []ListAnswer       `json:"anwers" bson:"answers"`
+	ID     primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Title  string             `json:"title" bson:"title"`
+	Answer Answer             `json:"anwers" bson:"answer"`
 }
 
-//ListAnswer is represent model for List data
-type ListAnswer struct {
-	ID         primitive.ObjectID `json:"id" bson:"_id"`
-	Title      string             `json:"title" bson:"title"`
-	IsCorrect  bool               `json:"isCorrect" bson:"isCorrect"`
-	IsSelected bool               `json:"isSelected" bson:"isSelected"`
+//Answer is represent model for Answer data
+type Answer struct {
+	List        []AnswerList         `json:"list" bson:"list"`
+	CorrectIds  []primitive.ObjectID `json:"-" bson:"correctIds"`
+	SelectedIds []primitive.ObjectID `json:"selectedIds" form:"selectedId" bson:"selectedIds"`
+}
+
+//AnswerList is represent model for AnswerList data
+type AnswerList struct {
+	ID    primitive.ObjectID `json:"id" bson:"_id"`
+	Title string             `json:"title" bson:"title"`
 }
 
 //QuestionG is represent model for QuestionG data
