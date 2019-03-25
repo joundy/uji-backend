@@ -72,12 +72,12 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	err = eLH.eGUsecase.Generate(userIDHex, examIDHex)
+	resID, err := eLH.eGUsecase.Generate(userIDHex, examIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	return eC.JSON(http.StatusNoContent, "")
+	return eC.JSON(http.StatusOK, resID)
 }
 
 func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {

@@ -26,7 +26,7 @@ func (m *mongoExamLogRepository) Start(IDHex, userIDHex *primitive.ObjectID, e *
 		{"userId", userIDHex},
 	}, bson.D{
 		{"$set", bson.D{
-			{"isStart", e.IsSubmit},
+			{"isStart", e.IsStart},
 			{"startTime", e.StartTime},
 			{"endTime", e.EndTime},
 		}},
@@ -93,15 +93,16 @@ func (m *mongoExamLogRepository) GetByID(IDHex, userIDHex *primitive.ObjectID) (
 	return &examLog, nil
 }
 
-func (m *mongoExamLogRepository) Store(e *models.ExamLog) error {
+func (m *mongoExamLogRepository) Store(e *models.ExamLog) (*models.ExamLog, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 
-	_, err := collection.InsertOne(context.TODO(), e)
+	res, err := collection.InsertOne(context.TODO(), e)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	e.ID = res.InsertedID.(primitive.ObjectID)
 
-	return nil
+	return e, nil
 }
 
 func (m *mongoExamLogRepository) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {

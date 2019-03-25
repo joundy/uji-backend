@@ -15,7 +15,7 @@ type ExamLog struct {
 	Questions     []Question         `json:"questions,omitempty" bson:"questions"`
 	StartTime     time.Time          `json:"startTime" bson:"startTime"`
 	EndTime       time.Time          `json:"endTime" bson:"endTime"`
-	RemainingTime float64            `json:"remainingTime"`
+	RemainingTime float64            `json:"remainingTime" bson:"-"`
 	Result        ExamLogResult      `json:"result" bson:"result"`
 	IsStart       bool               `json:"isStart" bson:"isStart"`
 	IsSubmit      bool               `json:"isSubmit" bson:"isSubmit"`

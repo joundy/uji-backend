@@ -105,21 +105,21 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 	return examLog, nil
 }
 
-func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) error {
+func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*models.ResID, error) {
 
 	exam, err := c.eRepository.GetByID(examIDHex)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	mF := models.Filter{Start: 0, Limit: 100, ExamID: examIDHex}
 	questionGs, err := c.qRepository.FetchG(mF)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(questionGs) == 0 {
-		return errors.New("No question found")
+		return nil, errors.New("No question found")
 	}
 
 	questionG := questionGs[0]
@@ -148,12 +148,14 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) error
 		Questions: qDataRaw[:exam.MaxQuestion],
 	}
 
-	err = c.eLRepository.Store(&examLog)
+	res, err := c.eLRepository.Store(&examLog)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	resID := models.ResID{ID: res.ID}
+
+	return &resID, nil
 }
 
 func (c *examLogUsecase) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {
