@@ -20,13 +20,18 @@ func NewAuthHandler(c *echo.Echo, aU auth.Usecase) {
 	c.POST("/auth", handler.Auth)
 }
 
+type credential struct {
+	Email    string
+	Password string
+}
+
 //Auth is method from Authhandler
 func (aH *AuthHandler) Auth(eC echo.Context) error {
 
-	email := "hafizjoundys@gmail.com"
-	password := "jondes"
+	var ct credential
+	eC.Bind(&ct)
 
-	auth, err := aH.aUsecase.Auth(email, password)
+	auth, err := aH.aUsecase.Auth(ct.Email, ct.Password)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
