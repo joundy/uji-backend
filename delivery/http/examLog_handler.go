@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/examlog"
 	"github.com/labstack/echo"
@@ -17,17 +18,22 @@ type examLogHandler struct {
 //NewExamLogHandler represent initialization generateHandler
 func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 	handler := &examLogHandler{eLU}
+	m := &Middleware{}
 
-	g := e.Group("/examLogs")
+	gAuth := e.Group("/examLogs")
+	gAuth.Use(m.JWTAuth())
 
-	g.POST("/generate", handler.Generate)
-	g.GET("/:id", handler.GetByIDAndStart)
-	g.GET("", handler.FetchG)
-	g.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
-	g.POST("/:id/submit", handler.Submit)
+	gAuth.POST("/generate", handler.Generate)
+	gAuth.GET("/:id", handler.GetByIDAndStart)
+	gAuth.GET("", handler.FetchG)
+	gAuth.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
+	gAuth.POST("/:id/submit", handler.Submit)
 }
 
 func (eLH *examLogHandler) FetchG(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
 	mF := models.Filter{Start: 0, Limit: 100}
 
 	if startP, ok := eC.QueryParams()["start"]; ok {
@@ -46,11 +52,12 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 		mF.Limit = limit
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
+	//usecase
 	examLogGs, err := eLH.eGUsecase.FetchG(&userIDHex, &mF)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
@@ -60,6 +67,8 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 }
 
 func (eLH *examLogHandler) Generate(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
 
 	examIDF := eC.FormValue("examId")
 	examIDHex, err := primitive.ObjectIDFromHex(examIDF)
@@ -67,11 +76,12 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
+	//usecase
 	resID, err := eLH.eGUsecase.Generate(userIDHex, examIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
@@ -81,6 +91,8 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 }
 
 func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
 
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
@@ -88,11 +100,12 @@ func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
+	//usecase
 	examLog, err := eLH.eGUsecase.GetByIDAndStart(&IDHex, &userIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
@@ -102,6 +115,9 @@ func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 }
 
 func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
 	if err != nil {
@@ -114,7 +130,7 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -133,6 +149,7 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 		isSelectedIdsHex = append(isSelectedIdsHex, elemHex)
 	}
 
+	//usecase
 	err = eLH.eGUsecase.SetAnswer(&IDHex, &userIDHex, &questionIDHex, &isSelectedIdsHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
@@ -142,6 +159,8 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 }
 
 func (eLH *examLogHandler) Submit(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
 
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
@@ -149,11 +168,12 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex("5c94d2b450e8986339d26534")
+	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
+	//usecase
 	err = eLH.eGUsecase.Submit(&IDHex, &userIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})

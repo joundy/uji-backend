@@ -33,6 +33,7 @@ func (c *authUsecase) Auth(email, password string) (*models.ResToken, error) {
 	}
 
 	claims := &models.JWTClaims{
+		user.ID,
 		user.Fullname,
 		user.Email,
 		user.UserTypeID,

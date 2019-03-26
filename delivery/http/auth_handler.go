@@ -31,6 +31,7 @@ func (aH *AuthHandler) Auth(eC echo.Context) error {
 	var ct credential
 	eC.Bind(&ct)
 
+	//usecase
 	auth, err := aH.aUsecase.Auth(ct.Email, ct.Password)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})

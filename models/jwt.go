@@ -7,6 +7,7 @@ import (
 
 //JWTClaims represent model for jwtClaims data
 type JWTClaims struct {
+	ID         primitive.ObjectID
 	Fullname   string
 	Email      string
 	UserTypeID primitive.ObjectID
