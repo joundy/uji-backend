@@ -18,7 +18,7 @@ func NewMongoExamGroupRepository(c *mongo.Client) Repository {
 	return &mongoExamGroupRepository{c}
 }
 
-func (m *mongoExamGroupRepository) FetchG(mF models.Filter) ([]*models.ExamGroupG, error) {
+func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGroupG, error) {
 	collection := m.mgoClient.Database("uji").Collection("examGroups")
 	var examGroupGs []*models.ExamGroupG
 

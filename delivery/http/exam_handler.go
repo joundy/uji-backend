@@ -51,7 +51,7 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 		mF.ExamGroupID = examGroupIDHex
 	}
 
-	examsGs, err := eH.eUsecase.FetchG(mF)
+	examsGs, err := eH.eUsecase.FetchG(&mF)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}

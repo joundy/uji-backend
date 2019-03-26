@@ -14,8 +14,8 @@ func NewExamGroupUsecase(cR examgroup.Repository) Usecase {
 	return &examGroupUsecase{cR}
 }
 
-func (c *examGroupUsecase) FetchG(filter models.Filter) ([]*models.ExamGroupG, error) {
-	examGroupGs, err := c.cRepository.FetchG(filter)
+func (c *examGroupUsecase) FetchG(mF *models.Filter) ([]*models.ExamGroupG, error) {
+	examGroupGs, err := c.cRepository.FetchG(mF)
 
 	if err != nil {
 		return nil, err

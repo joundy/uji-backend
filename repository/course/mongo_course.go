@@ -17,7 +17,7 @@ func NewMongoCourseRepository(c *mongo.Client) Repository {
 	return &mongoCourseRepository{c}
 }
 
-func (m *mongoCourseRepository) FetchG(mF models.Filter) ([]*models.CourseG, error) {
+func (m *mongoCourseRepository) FetchG(mF *models.Filter) ([]*models.CourseG, error) {
 	collection := m.mgoClient.Database("uji").Collection("courses")
 	var courseG []*models.CourseG
 

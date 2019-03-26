@@ -18,7 +18,7 @@ func NewMongoQuestionRepository(c *mongo.Client) Repository {
 	return &mongoQuestionRepository{c}
 }
 
-func (m *mongoQuestionRepository) FetchG(mF models.Filter) ([]*models.QuestionG, error) {
+func (m *mongoQuestionRepository) FetchG(mF *models.Filter) ([]*models.QuestionG, error) {
 	collection := m.mgoClient.Database("uji").Collection("questions")
 	var questionGs []*models.QuestionG
 	var zHex primitive.ObjectID

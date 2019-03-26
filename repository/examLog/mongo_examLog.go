@@ -105,7 +105,7 @@ func (m *mongoExamLogRepository) Store(e *models.ExamLog) (*models.ExamLog, erro
 	return e, nil
 }
 
-func (m *mongoExamLogRepository) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {
+func (m *mongoExamLogRepository) FetchG(userIDHex *primitive.ObjectID, mF *models.Filter) ([]*models.ExamLogG, error) {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 	var examLogGs []*models.ExamLogG
 

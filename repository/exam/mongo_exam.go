@@ -31,7 +31,7 @@ func (m *mongoExamRepository) GetByID(i primitive.ObjectID) (*models.Exam, error
 	return &exam, nil
 }
 
-func (m *mongoExamRepository) FetchG(mF models.Filter) ([]*models.ExamG, error) {
+func (m *mongoExamRepository) FetchG(mF *models.Filter) ([]*models.ExamG, error) {
 	collection := m.mgoClient.Database("uji").Collection("exams")
 	var examGs []*models.ExamG
 

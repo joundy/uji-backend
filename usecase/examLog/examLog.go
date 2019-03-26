@@ -113,7 +113,7 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 	}
 
 	mF := models.Filter{Start: 0, Limit: 100, ExamID: examIDHex}
-	questionGs, err := c.qRepository.FetchG(mF)
+	questionGs, err := c.qRepository.FetchG(&mF)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 	return &resID, nil
 }
 
-func (c *examLogUsecase) FetchG(userIDHex *primitive.ObjectID, mF models.Filter) ([]*models.ExamLogG, error) {
+func (c *examLogUsecase) FetchG(userIDHex *primitive.ObjectID, mF *models.Filter) ([]*models.ExamLogG, error) {
 	examLogGs, err := c.eLRepository.FetchG(userIDHex, mF)
 
 	if err != nil {

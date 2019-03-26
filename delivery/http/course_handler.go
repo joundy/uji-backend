@@ -43,7 +43,7 @@ func (cH *courseHandler) FetchG(eC echo.Context) error {
 		mF.Limit = limit
 	}
 
-	courseGs, err := cH.cUsecase.FetchG(mF)
+	courseGs, err := cH.cUsecase.FetchG(&mF)
 
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})

@@ -6,5 +6,5 @@ import (
 
 //Repository represent course repository contract
 type Repository interface {
-	FetchG(models.Filter) ([]*models.QuestionG, error)
+	FetchG(*models.Filter) ([]*models.QuestionG, error)
 }

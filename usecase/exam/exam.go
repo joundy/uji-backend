@@ -14,8 +14,8 @@ func NewExamUsecase(eR exam.Repository) Usecase {
 	return &examUsecase{eR}
 }
 
-func (eU *examUsecase) FetchG(filter models.Filter) ([]*models.ExamG, error) {
-	examsGs, err := eU.eRepository.FetchG(filter)
+func (eU *examUsecase) FetchG(mF *models.Filter) ([]*models.ExamG, error) {
+	examsGs, err := eU.eRepository.FetchG(mF)
 
 	if err != nil {
 		return nil, err

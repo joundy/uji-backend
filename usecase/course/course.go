@@ -14,8 +14,8 @@ func NewCourseUsecase(cR course.Repository) Usecase {
 	return &courseUsecase{cR}
 }
 
-func (c *courseUsecase) FetchG(filter models.Filter) ([]*models.CourseG, error) {
-	courseGs, err := c.cRepository.FetchG(filter)
+func (c *courseUsecase) FetchG(mF *models.Filter) ([]*models.CourseG, error) {
+	courseGs, err := c.cRepository.FetchG(mF)
 
 	if err != nil {
 		return nil, err

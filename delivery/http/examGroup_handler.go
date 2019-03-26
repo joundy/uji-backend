@@ -67,7 +67,7 @@ func (eGH *examGroupHandler) FetchG(eC echo.Context) error {
 		mF.LevelID = levelIDHex
 	}
 
-	courseGs, err := eGH.eGUsecase.FetchG(mF)
+	courseGs, err := eGH.eGUsecase.FetchG(&mF)
 	if err != nil {
 		eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
