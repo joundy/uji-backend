@@ -34,7 +34,7 @@ func (aH *AuthHandler) Auth(eC echo.Context) error {
 	//usecase
 	auth, err := aH.aUsecase.Auth(ct.Email, ct.Password)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: "Email or password not match"})
 	}
 
 	return eC.JSON(http.StatusOK, auth)

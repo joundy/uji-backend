@@ -39,7 +39,7 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 	if startP, ok := eC.QueryParams()["start"]; ok {
 		start, err := strconv.Atoi(startP[0])
 		if err != nil {
-			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 		}
 		mF.Start = start
 	}
@@ -47,7 +47,7 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 	if limitP, ok := eC.QueryParams()["limit"]; ok {
 		limit, err := strconv.Atoi(limitP[0])
 		if err != nil {
-			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 		}
 		mF.Limit = limit
 	}
@@ -73,7 +73,7 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 	examIDF := eC.FormValue("examId")
 	examIDHex, err := primitive.ObjectIDFromHex(examIDF)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
 	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
@@ -97,7 +97,7 @@ func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
 	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
@@ -121,13 +121,13 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
 	questionIDP := eC.Param("questionId")
 	questionIDHex, err := primitive.ObjectIDFromHex(questionIDP)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
 	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
@@ -143,7 +143,7 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 	for _, v := range isSelectedIds {
 		elemHex, err := primitive.ObjectIDFromHex(v)
 		if err != nil {
-			return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 		}
 
 		isSelectedIdsHex = append(isSelectedIdsHex, elemHex)
@@ -165,7 +165,7 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 	IDP := eC.Param("id")
 	IDHex, err := primitive.ObjectIDFromHex(IDP)
 	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
 	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
