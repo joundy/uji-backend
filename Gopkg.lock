@@ -62,9 +62,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b68c6b4d73db966b807484f7dd984588020128541b2a2b26f0653afa3eb3b67e"
+  digest = "1:0bfa77ee7ddf9792eeb17c8a579b5dd141b3b8c333509ab61d1999c7ecc6bc24"
   name = "github.com/haffjjj/myblog-backend"
-  packages = ["utils"]
+  packages = [
+    "models",
+    "utils",
+  ]
   pruneopts = "UT"
   revision = "22e6aef7a43a55a0be264f32500e797915fdfc56"
 
@@ -328,10 +331,14 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/dgrijalva/jwt-go",
     "github.com/go-playground/validator",
+    "github.com/haffjjj/myblog-backend/models",
     "github.com/haffjjj/myblog-backend/utils",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
+    "github.com/mongodb/mongo-go-driver/bson",
+    "github.com/mongodb/mongo-go-driver/bson/primitive",
     "github.com/mongodb/mongo-go-driver/mongo",
     "github.com/spf13/viper",
   ]
