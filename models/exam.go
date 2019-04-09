@@ -8,12 +8,14 @@ import (
 type Exam struct {
 	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	ExamGroupID  primitive.ObjectID `json:"examGroupId" bson:"examGroupId"`
+	ExamGroup    ExamGroup          `json:"-" bson:"examGroup"`
 	Title        string             `json:"title" bson:"title"`
 	Description  string             `json:"description" bson:"description"`
+	Slug         string             `json:"slug" bson:"slug"`
 	Duration     int                `json:"duration" bson:"duration"`
 	Source       string             `json:"source" bson:"source"`
 	IsRandom     bool               `json:"-" bson:"isRandom"`
-	MaxQuestion  int                `json:"-" bson:"maxQuestion"`
+	MaxQuestion  int                `json:"maxQuestion" bson:"maxQuestion"`
 	Point        int                `json:"point" bson:"point"`
 	PassingGrade int                `json:"passingGrade" bson:"passingGrade"`
 }

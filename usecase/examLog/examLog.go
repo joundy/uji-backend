@@ -134,15 +134,20 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 	}
 
 	examLog := models.ExamLog{
-		UserID: userIDHex,
-		ExamID: examIDHex,
+		UserID:      userIDHex,
+		ExamID:      exam.ID,
+		ExamGroupID: exam.ExamGroupID,
 		Exam: models.ExamLogExam{
+			Slug:         exam.Slug,
 			Title:        exam.Title,
 			Description:  exam.Description,
 			Duration:     exam.Duration,
 			Source:       exam.Source,
 			Point:        exam.Point,
 			PassingGrade: exam.PassingGrade,
+		},
+		ExamGroup: models.ExamLogExamGroup{
+			Slug: exam.ExamGroup.Slug,
 		},
 		IsSubmit:  false,
 		Questions: qDataRaw[:exam.MaxQuestion],

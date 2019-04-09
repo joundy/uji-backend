@@ -11,6 +11,8 @@ type ExamGroup struct {
 	LevelID     primitive.ObjectID `json:"-" bson:"levelId"`
 	ClassID     primitive.ObjectID `json:"-" bson:"classId"`
 	Description string             `json:"description" bson:"description"`
+	Slug        string             `json:"slug" bson:"slug"`
+	Tag         string             `json:"tag" bson:"tag"`
 	Level       Level              `json:"level" bson:"level"`
 	Class       Class              `json:"class" bson:"class"`
 }

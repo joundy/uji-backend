@@ -43,12 +43,16 @@ func (eH *examHandler) FetchG(eC echo.Context) error {
 		mF.Limit = limit
 	}
 
-	if examGroupIDP, ok := eC.QueryParams()["examGroup"]; ok {
+	if examGroupIDP, ok := eC.QueryParams()["examGroupId"]; ok {
 		examGroupIDHex, err := primitive.ObjectIDFromHex(examGroupIDP[0])
 		if err != nil {
 			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 		}
 		mF.ExamGroupID = examGroupIDHex
+	}
+
+	if examGroupSlugP, ok := eC.QueryParams()["examGroupSlug"]; ok {
+		mF.ExamGroupSlug = examGroupSlugP[0]
 	}
 
 	//usecase

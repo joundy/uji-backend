@@ -6,11 +6,13 @@ import (
 
 //Filter represent model for Filter data
 type Filter struct {
-	Start       int
-	Limit       int
-	ClassID     primitive.ObjectID
-	LevelID     primitive.ObjectID
-	ExamGroupID primitive.ObjectID
-	ExamID      primitive.ObjectID
-	CourseID    primitive.ObjectID
+	Start         int
+	Limit         int
+	Tag           string
+	ExamGroupSlug string
+	ClassID       primitive.ObjectID
+	LevelID       primitive.ObjectID
+	ExamGroupID   primitive.ObjectID
+	ExamID        primitive.ObjectID
+	CourseID      primitive.ObjectID
 }

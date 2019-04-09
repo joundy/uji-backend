@@ -39,18 +39,16 @@ func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGrou
 		fBClassId = bson.D{{"$match", bson.D{{"classId", mF.ClassID}}}}
 	}
 
+	fBTag := bson.D{{"$match", bson.D{}}}
+	if mF.Tag != "" {
+		fBTag = bson.D{{"$match", bson.D{{"tag", mF.Tag}}}}
+	}
+
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
 		fBCourseId,
 		fBLevelId,
 		fBClassId,
-		// bson.D{
-		// 	{"$lookup", bson.D{
-		// 		{"from", "courses"},
-		// 		{"localField", "courseId"},
-		// 		{"foreignField", "_id"},
-		// 		{"as", "course"},
-		// 	}},
-		// },
+		fBTag,
 		bson.D{
 			{"$lookup", bson.D{
 				{"from", "levels"},
@@ -69,9 +67,6 @@ func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGrou
 		},
 		bson.D{
 			{"$addFields", bson.D{
-				// {"course", bson.D{
-				// 	{"$arrayElemAt", []interface{}{"$course", 0}},
-				// }},
 				{"level", bson.D{
 					{"$arrayElemAt", []interface{}{"$level", 0}},
 				}},
