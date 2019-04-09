@@ -21,7 +21,7 @@ type ExamLog struct {
 	Result        ExamLogResult      `json:"result" bson:"result"`
 	IsStart       bool               `json:"isStart" bson:"isStart"`
 	IsSubmit      bool               `json:"isSubmit" bson:"isSubmit"`
-	IsAnonym      bool               `json:"-" bson:"isAnonym"`
+	IsGuest       bool               `json:"-" bson:"isGuest"`
 }
 
 //ExamLogResult is represent model for ExamLogResult data

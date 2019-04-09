@@ -105,7 +105,7 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 	return examLog, nil
 }
 
-func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*models.ResID, error) {
+func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID, isGuest bool) (*models.ResID, error) {
 
 	exam, err := c.eRepository.GetByID(examIDHex)
 	if err != nil {
@@ -150,6 +150,7 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 			Slug: exam.ExamGroup.Slug,
 		},
 		IsSubmit:  false,
+		IsGuest:   isGuest,
 		Questions: qDataRaw[:exam.MaxQuestion],
 	}
 
