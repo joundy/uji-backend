@@ -46,6 +46,9 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 		}
 	}
 
+	examLog.TimeSpent = time.Now().Local().Sub(examLog.StartTime).Seconds() * -1
+	// examLog.TimeSpent = 232323.0
+
 	examLog.IsSubmit = true
 
 	err = c.eLRepository.Submit(IDHex, userIDHex, examLog)
@@ -100,7 +103,9 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 		}
 	}
 
-	examLog.RemainingTime = time.Now().Local().Sub(examLog.EndTime).Seconds()
+	if !examLog.IsSubmit {
+		examLog.RemainingTime = time.Now().Local().Sub(examLog.EndTime).Seconds() * -1
+	}
 
 	return examLog, nil
 }
@@ -134,20 +139,15 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID, isGue
 	}
 
 	examLog := models.ExamLog{
-		UserID:      userIDHex,
-		ExamID:      exam.ID,
-		ExamGroupID: exam.ExamGroupID,
+		UserID: userIDHex,
+		ExamID: exam.ID,
 		Exam: models.ExamLogExam{
-			Slug:         exam.Slug,
 			Title:        exam.Title,
 			Description:  exam.Description,
 			Duration:     exam.Duration,
 			Source:       exam.Source,
 			Point:        exam.Point,
 			PassingGrade: exam.PassingGrade,
-		},
-		ExamGroup: models.ExamLogExamGroup{
-			Slug: exam.ExamGroup.Slug,
 		},
 		IsSubmit:  false,
 		IsGuest:   isGuest,

@@ -33,7 +33,7 @@ func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 	gAuth.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
 	g.PUT("/:id/guest/setAnswers/questions/:questionId", handler.SetAnswerGuest)
 	gAuth.POST("/:id/submit", handler.Submit)
-	g.POST("/:id/guest/submit", handler.Submit)
+	g.POST("/:id/guest/submit", handler.SubmitGuest)
 }
 
 func (eLH *examLogHandler) FetchG(eC echo.Context) error {

@@ -49,6 +49,7 @@ func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID, e 
 		{"$set", bson.D{
 			{"result", e.Result},
 			{"isSubmit", e.IsSubmit},
+			{"timeSpent", e.TimeSpent},
 		}},
 	})
 

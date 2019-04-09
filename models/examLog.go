@@ -11,13 +11,12 @@ type ExamLog struct {
 	ID            primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	UserID        primitive.ObjectID `json:"userId" bson:"userId"`
 	ExamID        primitive.ObjectID `json:"examId" bson:"examId"`
-	ExamGroupID   primitive.ObjectID `json:"examGroupId" bson:"examGroupId"`
 	Exam          ExamLogExam        `json:"exam" bson:"exam"`
-	ExamGroup     ExamLogExamGroup   `json:"examGroup" bson:"examGroup"`
 	Questions     []Question         `json:"questions,omitempty" bson:"questions"`
 	StartTime     time.Time          `json:"startTime" bson:"startTime"`
 	EndTime       time.Time          `json:"endTime" bson:"endTime"`
 	RemainingTime float64            `json:"remainingTime" bson:"-"`
+	TimeSpent     float64            `json:"timeSpent" bson:"timeSpent"`
 	Result        ExamLogResult      `json:"result" bson:"result"`
 	IsStart       bool               `json:"isStart" bson:"isStart"`
 	IsSubmit      bool               `json:"isSubmit" bson:"isSubmit"`
@@ -34,16 +33,10 @@ type ExamLogResult struct {
 type ExamLogExam struct {
 	Title        string `json:"title" bson:"title"`
 	Description  string `json:"description" bson:"description"`
-	Slug         string `json:"slug" bson:"slug"`
 	Duration     int    `json:"duration" bson:"duration"`
 	Source       string `json:"source" bson:"source"`
 	Point        int    `json:"point" bson:"point"`
 	PassingGrade int    `json:"passingGrade" bson:"passingGrade"`
-}
-
-//ExamLogExamGroup is represent model for ExamLogExamGroup data
-type ExamLogExamGroup struct {
-	Slug string `json:"slug" bson:"slug"`
 }
 
 //ExamLogG is represent model for ExamLogG data
