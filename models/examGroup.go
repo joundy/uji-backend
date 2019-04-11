@@ -10,6 +10,7 @@ type ExamGroup struct {
 	CourseID    primitive.ObjectID `json:"courseId" bson:"courseId"`
 	LevelID     primitive.ObjectID `json:"-" bson:"levelId"`
 	ClassID     primitive.ObjectID `json:"-" bson:"classId"`
+	Title       string             `json:"title" bson:"title"`
 	Description string             `json:"description" bson:"description"`
 	Slug        string             `json:"slug" bson:"slug"`
 	Tag         string             `json:"tag" bson:"tag"`

@@ -21,19 +21,14 @@ func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 	m := &Middleware{}
 
 	gAuth := e.Group("/examLogs")
-	g := e.Group("/examLogs")
 	gAuth.Use(m.JWTAuth())
 
-	g.POST("/generate/guest", handler.GenerateGuest)
 	gAuth.POST("/generate", handler.Generate)
 
 	gAuth.GET("/:id", handler.GetByIDAndStart)
-	g.GET("/:id/guest", handler.GetByIDAndStartGuest)
 	gAuth.GET("", handler.FetchG)
 	gAuth.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
-	g.PUT("/:id/guest/setAnswers/questions/:questionId", handler.SetAnswerGuest)
 	gAuth.POST("/:id/submit", handler.Submit)
-	g.POST("/:id/guest/submit", handler.SubmitGuest)
 }
 
 func (eLH *examLogHandler) FetchG(eC echo.Context) error {
@@ -88,25 +83,7 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 	}
 
 	//usecase
-	resID, err := eLH.eGUsecase.Generate(userIDHex, examIDHex, false)
-	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
-	}
-
-	return eC.JSON(http.StatusOK, resID)
-}
-
-func (eLH *examLogHandler) GenerateGuest(eC echo.Context) error {
-	examIDF := eC.FormValue("examId")
-	examIDHex, err := primitive.ObjectIDFromHex(examIDF)
-	if err != nil {
-		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-	}
-
-	var userIDHex primitive.ObjectID
-
-	//usecase
-	resID, err := eLH.eGUsecase.Generate(userIDHex, examIDHex, true)
+	resID, err := eLH.eGUsecase.Generate(userIDHex, examIDHex)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -128,24 +105,6 @@ func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
-
-	//usecase
-	examLog, err := eLH.eGUsecase.GetByIDAndStart(&IDHex, &userIDHex)
-	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
-	}
-
-	return eC.JSON(http.StatusOK, examLog)
-}
-
-func (eLH *examLogHandler) GetByIDAndStartGuest(eC echo.Context) error {
-	IDP := eC.Param("id")
-	IDHex, err := primitive.ObjectIDFromHex(IDP)
-	if err != nil {
-		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-	}
-
-	var userIDHex primitive.ObjectID
 
 	//usecase
 	examLog, err := eLH.eGUsecase.GetByIDAndStart(&IDHex, &userIDHex)
@@ -200,44 +159,6 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 	return eC.JSON(http.StatusNoContent, "")
 }
 
-func (eLH *examLogHandler) SetAnswerGuest(eC echo.Context) error {
-	IDP := eC.Param("id")
-	IDHex, err := primitive.ObjectIDFromHex(IDP)
-	if err != nil {
-		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-	}
-
-	questionIDP := eC.Param("questionId")
-	questionIDHex, err := primitive.ObjectIDFromHex(questionIDP)
-	if err != nil {
-		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-	}
-
-	var userIDHex primitive.ObjectID
-
-	var isSelectedIdsHex []primitive.ObjectID
-
-	fParams, _ := eC.FormParams()
-	isSelectedIds := fParams["isSelectedId"]
-
-	for _, v := range isSelectedIds {
-		elemHex, err := primitive.ObjectIDFromHex(v)
-		if err != nil {
-			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-		}
-
-		isSelectedIdsHex = append(isSelectedIdsHex, elemHex)
-	}
-
-	//usecase
-	err = eLH.eGUsecase.SetAnswer(&IDHex, &userIDHex, &questionIDHex, &isSelectedIdsHex)
-	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
-	}
-
-	return eC.JSON(http.StatusNoContent, "")
-}
-
 func (eLH *examLogHandler) Submit(eC echo.Context) error {
 	user := eC.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
@@ -252,24 +173,6 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
-
-	//usecase
-	err = eLH.eGUsecase.Submit(&IDHex, &userIDHex)
-	if err != nil {
-		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
-	}
-
-	return eC.JSON(http.StatusNoContent, "")
-}
-
-func (eLH *examLogHandler) SubmitGuest(eC echo.Context) error {
-	IDP := eC.Param("id")
-	IDHex, err := primitive.ObjectIDFromHex(IDP)
-	if err != nil {
-		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-	}
-
-	var userIDHex primitive.ObjectID
 
 	//usecase
 	err = eLH.eGUsecase.Submit(&IDHex, &userIDHex)
