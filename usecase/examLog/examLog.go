@@ -46,7 +46,7 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 		}
 	}
 
-	examLog.TimeSpent = time.Now().Local().Sub(examLog.StartTime).Seconds() * -1
+	examLog.TimeSpent = time.Now().Local().Sub(examLog.StartTime).Seconds()
 	// examLog.TimeSpent = 232323.0
 
 	examLog.IsSubmit = true
@@ -59,7 +59,7 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 	return nil
 }
 
-func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
+func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, selectedIdsHex *[]primitive.ObjectID) error {
 	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
 	if err != nil {
 		return err
@@ -77,7 +77,33 @@ func (c *examLogUsecase) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.Ob
 		return errors.New("timeout, please submit exam..")
 	}
 
-	err = c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, isSelectedIdsHex)
+	err = c.eLRepository.SetAnswer(IDHex, userIDHex, questionIDHex, selectedIdsHex)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *examLogUsecase) SetIsMarked(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isMarked *bool) error {
+	examLog, err := c.eLRepository.GetByID(IDHex, userIDHex)
+	if err != nil {
+		return err
+	}
+
+	if examLog.IsSubmit == true {
+		return errors.New("exam already submitted")
+	}
+
+	if examLog.IsStart == false {
+		return errors.New("the exam hasn't started yet, please start first")
+	}
+
+	if time.Now().Local().Sub(examLog.EndTime).Seconds() >= 0 {
+		return errors.New("timeout, please submit exam..")
+	}
+
+	err = c.eLRepository.SetIsMarked(IDHex, userIDHex, questionIDHex, isMarked)
 	if err != nil {
 		return err
 	}

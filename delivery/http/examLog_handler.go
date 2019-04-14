@@ -28,6 +28,7 @@ func NewExamLogHandler(e *echo.Echo, eLU examlog.Usecase) {
 	gAuth.GET("/:id", handler.GetByIDAndStart)
 	gAuth.GET("", handler.FetchG)
 	gAuth.PUT("/:id/setAnswers/questions/:questionId", handler.SetAnswer)
+	gAuth.PUT("/:id/setIsMarked/questions/:questionId", handler.SetIsMarked)
 	gAuth.POST("/:id/submit", handler.Submit)
 }
 
@@ -72,12 +73,13 @@ func (eLH *examLogHandler) Generate(eC echo.Context) error {
 	claims := user.Claims.(jwt.MapClaims)
 
 	examIDF := eC.FormValue("examId")
+
 	examIDHex, err := primitive.ObjectIDFromHex(examIDF)
 	if err != nil {
 		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -101,7 +103,7 @@ func (eLH *examLogHandler) GetByIDAndStart(eC echo.Context) error {
 		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -131,27 +133,63 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
 
-	var isSelectedIdsHex []primitive.ObjectID
+	var selectedIdsHex []primitive.ObjectID
 
 	fParams, _ := eC.FormParams()
-	isSelectedIds := fParams["isSelectedId"]
+	selectedIds := fParams["selectedIds"]
 
-	for _, v := range isSelectedIds {
+	for _, v := range selectedIds {
 		elemHex, err := primitive.ObjectIDFromHex(v)
 		if err != nil {
 			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 		}
 
-		isSelectedIdsHex = append(isSelectedIdsHex, elemHex)
+		selectedIdsHex = append(selectedIdsHex, elemHex)
 	}
 
 	//usecase
-	err = eLH.eGUsecase.SetAnswer(&IDHex, &userIDHex, &questionIDHex, &isSelectedIdsHex)
+	err = eLH.eGUsecase.SetAnswer(&IDHex, &userIDHex, &questionIDHex, &selectedIdsHex)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusNoContent, "")
+}
+
+func (eLH *examLogHandler) SetIsMarked(eC echo.Context) error {
+	user := eC.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	IDP := eC.Param("id")
+	IDHex, err := primitive.ObjectIDFromHex(IDP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	questionIDP := eC.Param("questionId")
+	questionIDHex, err := primitive.ObjectIDFromHex(questionIDP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	isMarkedP := eC.FormValue("isMarked")
+	isMarked, err := strconv.ParseBool(isMarkedP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	//usecase
+	err = eLH.eGUsecase.SetIsMarked(&IDHex, &userIDHex, &questionIDHex, &isMarked)
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -169,7 +207,7 @@ func (eLH *examLogHandler) Submit(eC echo.Context) error {
 		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}

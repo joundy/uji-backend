@@ -60,7 +60,7 @@ func (m *mongoExamLogRepository) Submit(IDHex, userIDHex *primitive.ObjectID, e 
 	return nil
 }
 
-func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isSelectedIdsHex *[]primitive.ObjectID) error {
+func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *primitive.ObjectID, selectedIdsHex *[]primitive.ObjectID) error {
 	collection := m.mgoClient.Database("uji").Collection("examLogs")
 
 	_, err := collection.UpdateOne(context.TODO(), bson.D{
@@ -69,7 +69,27 @@ func (m *mongoExamLogRepository) SetAnswer(IDHex, userIDHex, questionIDHex *prim
 		{"questions._id", questionIDHex},
 	}, bson.D{
 		{"$set", bson.D{
-			{"questions.$.answer.selectedIds", isSelectedIdsHex},
+			{"questions.$.answer.selectedIds", selectedIdsHex},
+		}},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mongoExamLogRepository) SetIsMarked(IDHex, userIDHex, questionIDHex *primitive.ObjectID, isMarked *bool) error {
+	collection := m.mgoClient.Database("uji").Collection("examLogs")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", IDHex},
+		{"userId", userIDHex},
+		{"questions._id", questionIDHex},
+	}, bson.D{
+		{"$set", bson.D{
+			{"questions.$.isMarked", isMarked},
 		}},
 	})
 

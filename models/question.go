@@ -6,9 +6,10 @@ import (
 
 //Question is represent model for Question data
 type Question struct {
-	ID     primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Title  string             `json:"title" bson:"title"`
-	Answer Answer             `json:"anwer" bson:"answer"`
+	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Title    string             `json:"title" bson:"title"`
+	Answer   Answer             `json:"answer" bson:"answer"`
+	IsMarked bool               `json:"isMarked" bson:"isMarked"`
 }
 
 //Answer is represent model for Answer data
