@@ -118,7 +118,6 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 	}
 
 	if examLog.IsStart == false {
-
 		examLog.IsStart = true
 		examLog.StartTime = time.Now()
 		examLog.EndTime = time.Now().Local().Add(time.Second * time.Duration(examLog.Exam.Duration))
@@ -131,6 +130,15 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 
 	if !examLog.IsSubmit {
 		examLog.RemainingTime = time.Now().Local().Sub(examLog.EndTime).Seconds() * -1
+
+		var questions []models.Question
+
+		for _, v := range examLog.Questions {
+			v.Answer.CorrectIds = []primitive.ObjectID{}
+			questions = append(questions, v)
+		}
+
+		examLog.Questions = questions
 	}
 
 	return examLog, nil

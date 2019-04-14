@@ -15,7 +15,7 @@ type Question struct {
 //Answer is represent model for Answer data
 type Answer struct {
 	List        []AnswerList         `json:"list" bson:"list"`
-	CorrectIds  []primitive.ObjectID `json:"-" bson:"correctIds"`
+	CorrectIds  []primitive.ObjectID `json:"correctIds" bson:"correctIds"`
 	SelectedIds []primitive.ObjectID `json:"selectedIds" form:"selectedId" bson:"selectedIds"`
 }
 
