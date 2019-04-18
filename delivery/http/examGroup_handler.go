@@ -7,7 +7,6 @@ import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/examgroup"
 	"github.com/labstack/echo"
-	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 //examGroupHandler represent handler for course
@@ -43,28 +42,12 @@ func (eGH *examGroupHandler) FetchG(eC echo.Context) error {
 		mF.Limit = limit
 	}
 
-	if courseIDP, ok := eC.QueryParams()["courseId"]; ok {
-		courseIDHex, err := primitive.ObjectIDFromHex(courseIDP[0])
-		if err != nil {
-			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-		}
-		mF.CourseID = courseIDHex
+	if classP, ok := eC.QueryParams()["class"]; ok {
+		mF.Class = classP[0]
 	}
 
-	if classIDP, ok := eC.QueryParams()["classId"]; ok {
-		classIDHex, err := primitive.ObjectIDFromHex(classIDP[0])
-		if err != nil {
-			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-		}
-		mF.ClassID = classIDHex
-	}
-
-	if levelIDP, ok := eC.QueryParams()["levelId"]; ok {
-		levelIDHex, err := primitive.ObjectIDFromHex(levelIDP[0])
-		if err != nil {
-			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
-		}
-		mF.LevelID = levelIDHex
+	if levelP, ok := eC.QueryParams()["level"]; ok {
+		mF.Level = levelP[0]
 	}
 
 	if tagP, ok := eC.QueryParams()["tag"]; ok {

@@ -10,9 +10,8 @@ type Filter struct {
 	Limit         int
 	Tag           string
 	ExamGroupSlug string
-	ClassID       primitive.ObjectID
-	LevelID       primitive.ObjectID
+	Class         string
+	Level         string
 	ExamGroupID   primitive.ObjectID
 	ExamID        primitive.ObjectID
-	CourseID      primitive.ObjectID
 }

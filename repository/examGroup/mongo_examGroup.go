@@ -5,7 +5,6 @@ import (
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
@@ -22,21 +21,14 @@ func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGrou
 	collection := m.mgoClient.Database("uji").Collection("examGroups")
 	var examGroupGs []*models.ExamGroupG
 
-	var zHex primitive.ObjectID
-
-	fBCourseId := bson.D{{"$match", bson.D{}}}
-	if mF.CourseID != zHex {
-		fBCourseId = bson.D{{"$match", bson.D{{"courseId", mF.CourseID}}}}
+	fBLevel := bson.D{{"$match", bson.D{}}}
+	if mF.Level != "" {
+		fBLevel = bson.D{{"$match", bson.D{{"level", mF.Level}}}}
 	}
 
-	fBLevelId := bson.D{{"$match", bson.D{}}}
-	if mF.LevelID != zHex {
-		fBLevelId = bson.D{{"$match", bson.D{{"levelId", mF.LevelID}}}}
-	}
-
-	fBClassId := bson.D{{"$match", bson.D{}}}
-	if mF.ClassID != zHex {
-		fBClassId = bson.D{{"$match", bson.D{{"classId", mF.ClassID}}}}
+	fBClass := bson.D{{"$match", bson.D{}}}
+	if mF.Class != "" {
+		fBClass = bson.D{{"$match", bson.D{{"class", mF.Class}}}}
 	}
 
 	fBTag := bson.D{{"$match", bson.D{}}}
@@ -45,9 +37,8 @@ func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGrou
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
-		fBCourseId,
-		fBLevelId,
-		fBClassId,
+		fBLevel,
+		fBClass,
 		fBTag,
 		bson.D{
 			{"$lookup", bson.D{
