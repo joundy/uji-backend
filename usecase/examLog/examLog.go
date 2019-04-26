@@ -151,7 +151,7 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 		return nil, err
 	}
 
-	mF := models.Filter{Start: 0, Limit: 100, ExamID: examIDHex}
+	mF := models.Filter{Start: 0, Limit: 200, ExamID: examIDHex}
 	questionGs, err := c.qRepository.FetchG(&mF)
 	if err != nil {
 		return nil, err

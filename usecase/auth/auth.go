@@ -39,7 +39,7 @@ func (c *authUsecase) AuthGuest() (*models.ResToken, error) {
 		email,
 		userTypeID,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
 		},
 	}
 

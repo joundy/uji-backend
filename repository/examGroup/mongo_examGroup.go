@@ -40,32 +40,32 @@ func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGrou
 		fBLevel,
 		fBClass,
 		fBTag,
-		bson.D{
-			{"$lookup", bson.D{
-				{"from", "levels"},
-				{"localField", "levelId"},
-				{"foreignField", "_id"},
-				{"as", "level"},
-			}},
-		},
-		bson.D{
-			{"$lookup", bson.D{
-				{"from", "classes"},
-				{"localField", "classId"},
-				{"foreignField", "_id"},
-				{"as", "class"},
-			}},
-		},
-		bson.D{
-			{"$addFields", bson.D{
-				{"level", bson.D{
-					{"$arrayElemAt", []interface{}{"$level", 0}},
-				}},
-				{"class", bson.D{
-					{"$arrayElemAt", []interface{}{"$class", 0}},
-				}},
-			}},
-		},
+		// bson.D{
+		// 	{"$lookup", bson.D{
+		// 		{"from", "levels"},
+		// 		{"localField", "levelId"},
+		// 		{"foreignField", "_id"},
+		// 		{"as", "level"},
+		// 	}},
+		// },
+		// bson.D{
+		// 	{"$lookup", bson.D{
+		// 		{"from", "classes"},
+		// 		{"localField", "classId"},
+		// 		{"foreignField", "_id"},
+		// 		{"as", "class"},
+		// 	}},
+		// },
+		// bson.D{
+		// 	{"$addFields", bson.D{
+		// 		{"level", bson.D{
+		// 			{"$arrayElemAt", []interface{}{"$level", 0}},
+		// 		}},
+		// 		{"class", bson.D{
+		// 			{"$arrayElemAt", []interface{}{"$class", 0}},
+		// 		}},
+		// 	}},
+		// },
 		bson.D{
 			{"$group", bson.D{
 				{"_id", nil},
