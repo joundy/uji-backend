@@ -129,7 +129,6 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 	}
 
 	if !examLog.IsSubmit {
-		examLog.RemainingTime = time.Now().Local().Sub(examLog.EndTime).Seconds() * -1
 
 		var questions []models.Question
 
