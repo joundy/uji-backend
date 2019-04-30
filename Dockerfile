@@ -1,9 +1,8 @@
 FROM golang:1.8
 
-ENV GOBIN /go/bin
-ENV GOPATH /go
-
-WORKDIR /go/src/github.com/haffjjj/uji-backend/
-COPY . .
+COPY . /go/src/github.com/haffjjj/uji-backend
+WORKDIR /go/src/github.com/haffjjj/uji-backend
 
 CMD ["make", "start"]
+
+EXPOSE 9001
