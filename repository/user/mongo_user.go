@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/haffjjj/myblog-backend/models"
+	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
 )

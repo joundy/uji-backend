@@ -28,11 +28,7 @@
 [[constraint]]
   name = "github.com/go-playground/validator"
   version = "9.27.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/haffjjj/myblog-backend"
-
+  
 [[constraint]]
   name = "github.com/labstack/echo"
   version = "3.3.10"

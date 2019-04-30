@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/go-playground/validator"
-	"github.com/haffjjj/myblog-backend/utils"
+	"github.com/haffjjj/uji-backend/utils"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/mongodb/mongo-go-driver/mongo"

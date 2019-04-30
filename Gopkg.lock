@@ -61,17 +61,6 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
-  branch = "master"
-  digest = "1:0bfa77ee7ddf9792eeb17c8a579b5dd141b3b8c333509ab61d1999c7ecc6bc24"
-  name = "github.com/haffjjj/myblog-backend"
-  packages = [
-    "models",
-    "utils",
-  ]
-  pruneopts = "UT"
-  revision = "22e6aef7a43a55a0be264f32500e797915fdfc56"
-
-[[projects]]
   digest = "1:c0d19ab64b32ce9fe5cf4ddceba78d5bc9807f0016db6b1183599da3dcc24d10"
   name = "github.com/hashicorp/hcl"
   packages = [
@@ -278,11 +267,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ae90f4a0fa8a61c656a54c08aedbabfa79973d3d2151573a2c5d0bafd688cf7d"
+  digest = "1:f33af64a15fdaf1b5d80dfb7dc386854df0187e05cdeb2359dd268e150f3d2be"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
+    "bcrypt",
+    "blowfish",
     "pbkdf2",
   ]
   pruneopts = "UT"
@@ -333,14 +324,13 @@
   input-imports = [
     "github.com/dgrijalva/jwt-go",
     "github.com/go-playground/validator",
-    "github.com/haffjjj/myblog-backend/models",
-    "github.com/haffjjj/myblog-backend/utils",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
     "github.com/mongodb/mongo-go-driver/bson",
     "github.com/mongodb/mongo-go-driver/bson/primitive",
     "github.com/mongodb/mongo-go-driver/mongo",
     "github.com/spf13/viper",
+    "golang.org/x/crypto/bcrypt",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

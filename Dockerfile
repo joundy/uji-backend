@@ -8,6 +8,6 @@ WORKDIR /go/src/github.com/haffjjj/uji-backend
 
 COPY . .
 
-EXPOSE 9001
+EXPOSE 9000
 
 CMD make start
