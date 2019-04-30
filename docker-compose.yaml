@@ -1,13 +1,15 @@
 version: "2.3"
 services:
   web:
-    image: ujiservice
+    build: .
     ports:
       - 9001:9001
     depends_on:
       - mongo
     labels:
-      - "traefik.frontend.rule=Host:api-uji.yuksinau.id"
+      - "traefik.enable=true"
+      - "traefik.port=9001"
+      - "traefik.frontend.rule=Host:testing.yuksinau.id"
 
   mongo:
     image: mongo
