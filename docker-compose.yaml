@@ -1,6 +1,14 @@
 version: "2.3"
 services:
-  uji-api:
-    build: .
+  web:
+    image: ujiservice
     ports:
-      - 9002:9001
+      - 9001:9001
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27020:27017

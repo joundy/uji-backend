@@ -1,8 +1,13 @@
-FROM golang:1.8
+# Builder
+FROM golang:1.11.4-alpine3.8
 
-COPY . /go/src/github.com/haffjjj/uji-backend
+RUN apk update && apk upgrade && \
+    apk --update add git gcc make
+
 WORKDIR /go/src/github.com/haffjjj/uji-backend
 
-CMD make start
+COPY . .
 
 EXPOSE 9001
+
+CMD make start
