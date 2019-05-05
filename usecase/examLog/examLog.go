@@ -38,8 +38,30 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 		return errors.New("the exam hasn't started yet, please start first")
 	}
 
-	for _, vQ := range examLog.Questions {
-		if eqAnswers(vQ.Answer.CorrectIds, vQ.Answer.SelectedIds) == true {
+	//includes function
+	contains := func(selectedIds []primitive.ObjectID, id primitive.ObjectID) bool {
+		for _, v := range selectedIds {
+			if v == id {
+				return true
+			}
+		}
+		return false
+	}
+
+	//check list answer one by one
+	eqAnswers := func(list []models.AnswerList, selectedIds []primitive.ObjectID) bool {
+		for _, v := range list {
+			if v.IsCorrect == true {
+				if contains(selectedIds, v.ID) != true {
+					return false
+				}
+			}
+		}
+		return true
+	}
+
+	for _, v := range examLog.Questions {
+		if eqAnswers(v.Answer.List, v.Answer.SelectedIds) == true {
 			examLog.Result.Pass++
 		} else {
 			examLog.Result.Failed++
@@ -47,7 +69,6 @@ func (c *examLogUsecase) Submit(IDHex, userIDHex *primitive.ObjectID) error {
 	}
 
 	examLog.TimeSpent = time.Now().Local().Sub(examLog.StartTime).Seconds()
-	// examLog.TimeSpent = 232323.0
 
 	examLog.IsSubmit = true
 
@@ -128,16 +149,12 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 		}
 	}
 
-	if !examLog.IsSubmit {
-
-		var questions []models.Question
-
-		for _, v := range examLog.Questions {
-			v.Answer.CorrectIds = []primitive.ObjectID{}
-			questions = append(questions, v)
+	if examLog.IsSubmit == false {
+		for i, v := range examLog.Questions {
+			for j := range v.Answer.List {
+				examLog.Questions[i].Answer.List[j].IsCorrect = false
+			}
 		}
-
-		examLog.Questions = questions
 	}
 
 	return examLog, nil
@@ -150,18 +167,11 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 		return nil, err
 	}
 
-	mF := models.Filter{Start: 0, Limit: 200, ExamID: examIDHex}
-	questionGs, err := c.qRepository.FetchG(&mF)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(questionGs) == 0 {
+	if len(exam.Questions) == 0 {
 		return nil, errors.New("No question found")
 	}
 
-	questionG := questionGs[0]
-	qDataRaw := questionG.Data
+	qDataRaw := exam.Questions
 
 	if exam.IsRandom == true {
 		shuffleQuestions(&qDataRaw)
@@ -214,23 +224,4 @@ func shuffleQuestions(q *[]models.Question) {
 
 		(*q)[i], (*q)[r] = (*q)[r], (*q)[i]
 	}
-}
-
-func eqAnswers(cI, sI []primitive.ObjectID) bool {
-	if len(cI) != len(sI) {
-		return false
-	}
-
-	for iCI := range cI {
-		for _, vSI := range sI {
-			if cI[iCI] == vSI {
-				break
-			}
-			if vSI == sI[len(sI)-1] {
-				return false
-			}
-		}
-	}
-
-	return true
 }

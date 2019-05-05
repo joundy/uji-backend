@@ -18,6 +18,28 @@ type Exam struct {
 	MaxQuestion  int                `json:"maxQuestion" bson:"maxQuestion"`
 	Point        int                `json:"point" bson:"point"`
 	PassingGrade int                `json:"passingGrade" bson:"passingGrade"`
+	Questions    []Question         `json:"-" bson:"questions"`
+}
+
+//Question is represent model for Question data
+type Question struct {
+	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Title    string             `json:"title" bson:"title"`
+	Answer   Answer             `json:"answer" bson:"answer"`
+	IsMarked bool               `json:"isMarked" bson:"isMarked"`
+}
+
+//Answer is represent model for Answer data
+type Answer struct {
+	List        []AnswerList         `json:"list" bson:"list"`
+	SelectedIds []primitive.ObjectID `json:"selectedIds" form:"selectedId" bson:"selectedIds"`
+}
+
+//AnswerList is represent model for AnswerList data
+type AnswerList struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Title     string             `json:"title" bson:"title"`
+	IsCorrect bool               `json:"isCorrect" bson:"isCorrect"`
 }
 
 //ExamG is represent model for courseGroup data

@@ -54,7 +54,7 @@ func (eLH *examLogHandler) FetchG(eC echo.Context) error {
 		mF.Limit = limit
 	}
 
-	userIDHex, err := primitive.ObjectIDFromHex(claims["ID"].(string))
+	userIDHex, err := primitive.ObjectIDFromHex(claims["id"].(string))
 	if err != nil {
 		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
 	}
@@ -141,7 +141,7 @@ func (eLH *examLogHandler) SetAnswer(eC echo.Context) error {
 	var selectedIdsHex []primitive.ObjectID
 
 	fParams, _ := eC.FormParams()
-	selectedIds := fParams["selectedIds"]
+	selectedIds := fParams["selectedId"]
 
 	for _, v := range selectedIds {
 		elemHex, err := primitive.ObjectIDFromHex(v)
