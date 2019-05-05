@@ -1,25 +1,29 @@
 package models
 
-// //Question is represent model for Question data
-// type Question struct {
-// 	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-// 	Title    string             `json:"title" bson:"title"`
-// 	Answer   Answer             `json:"answer" bson:"answer"`
-// 	IsMarked bool               `json:"isMarked" bson:"isMarked"`
-// }
+import (
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
+)
 
-// //Answer is represent model for Answer data
-// type Answer struct {
-// 	List        []AnswerList         `json:"list" bson:"list"`
-// 	CorrectIds  []primitive.ObjectID `json:"correctIds" bson:"correctIds"`
-// 	SelectedIds []primitive.ObjectID `json:"selectedIds" form:"selectedId" bson:"selectedIds"`
-// }
+//Question is represent model for Question data
+type Question struct {
+	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Title    string             `json:"title" bson:"title"`
+	Answer   Answer             `json:"answer" bson:"answer"`
+	IsMarked bool               `json:"isMarked" bson:"isMarked"`
+}
 
-// //AnswerList is represent model for AnswerList data
-// type AnswerList struct {
-// 	ID    primitive.ObjectID `json:"id" bson:"_id"`
-// 	Title string             `json:"title" bson:"title"`
-// }
+//Answer is represent model for Answer data
+type Answer struct {
+	List        []AnswerList         `json:"list" bson:"list"`
+	SelectedIds []primitive.ObjectID `json:"selectedIds" form:"selectedId" bson:"selectedIds"`
+}
+
+//AnswerList is represent model for AnswerList data
+type AnswerList struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Title     string             `json:"title" bson:"title"`
+	IsCorrect bool               `json:"isCorrect" bson:"isCorrect"`
+}
 
 //QuestionG is represent model for QuestionG data
 type QuestionG struct {

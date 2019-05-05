@@ -167,11 +167,18 @@ func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*mod
 		return nil, err
 	}
 
-	if len(exam.Questions) == 0 {
+	mF := models.Filter{Start: 0, Limit: 200, ExamID: examIDHex}
+	questionGs, err := c.qRepository.FetchG(&mF)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(questionGs) == 0 {
 		return nil, errors.New("No question found")
 	}
 
-	qDataRaw := exam.Questions
+	questionG := questionGs[0]
+	qDataRaw := questionG.Data
 
 	if exam.IsRandom == true {
 		shuffleQuestions(&qDataRaw)
