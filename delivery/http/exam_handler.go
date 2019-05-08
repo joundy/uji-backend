@@ -22,6 +22,29 @@ func NewExamHandler(e *echo.Echo, eU exam.Usecase) {
 	c := e.Group("/exams")
 
 	c.GET("", handler.FetchG)
+	c.POST("", handler.Create)
+}
+
+func (eH *examHandler) Create(eC echo.Context) error {
+	var exam models.Exam
+	eC.Bind(&exam)
+
+	exam.ID = primitive.NewObjectID()
+
+	if examGroupIDP, ok := eC.QueryParams()["examGroupId"]; ok {
+		examGroupIDHex, err := primitive.ObjectIDFromHex(examGroupIDP[0])
+		if err != nil {
+			return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+		}
+		exam.ExamGroupID = examGroupIDHex
+	}
+
+	resID, err := eH.eUsecase.Create(&exam)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusOK, resID)
 }
 
 func (eH *examHandler) FetchG(eC echo.Context) error {

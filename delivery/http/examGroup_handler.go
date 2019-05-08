@@ -7,6 +7,7 @@ import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/usecase/examgroup"
 	"github.com/labstack/echo"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 //examGroupHandler represent handler for course
@@ -21,6 +22,21 @@ func NewExamGroupHandler(e *echo.Echo, eGU examgroup.Usecase) {
 	c := e.Group("/examGroups")
 
 	c.GET("", handler.FetchG)
+	c.POST("", handler.Create)
+}
+
+func (eGH *examGroupHandler) Create(eC echo.Context) error {
+	var examGroup models.ExamGroup
+	eC.Bind(&examGroup)
+
+	examGroup.ID = primitive.NewObjectID()
+
+	resID, err := eGH.eGUsecase.Create(&examGroup)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusOK, resID)
 }
 
 func (eGH *examGroupHandler) FetchG(eC echo.Context) error {

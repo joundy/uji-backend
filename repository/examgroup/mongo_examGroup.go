@@ -17,6 +17,21 @@ func NewMongoExamGroupRepository(c *mongo.Client) Repository {
 	return &mongoExamGroupRepository{c}
 }
 
+func (m *mongoExamGroupRepository) Create(eG *models.ExamGroup) (*models.ResID, error) {
+	collection := m.mgoClient.Database("uji").Collection("examGroups")
+
+	_, err := collection.InsertOne(context.Background(), eG)
+	if err != nil {
+		return nil, err
+	}
+
+	resID := models.ResID{
+		ID: eG.ID,
+	}
+
+	return &resID, nil
+}
+
 func (m *mongoExamGroupRepository) FetchG(mF *models.Filter) ([]*models.ExamGroupG, error) {
 	collection := m.mgoClient.Database("uji").Collection("examGroups")
 	var examGroupGs []*models.ExamGroupG

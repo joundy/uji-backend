@@ -19,6 +19,21 @@ func NewMongoExamRepository(c *mongo.Client) Repository {
 	return &mongoExamRepository{c}
 }
 
+func (m *mongoExamRepository) Create(e *models.Exam) (*models.ResID, error) {
+	collection := m.mgoClient.Database("uji").Collection("exams")
+
+	_, err := collection.InsertOne(context.Background(), e)
+	if err != nil {
+		return nil, err
+	}
+
+	resID := models.ResID{
+		ID: e.ID,
+	}
+
+	return &resID, nil
+}
+
 func (m *mongoExamRepository) GetByID(i primitive.ObjectID) (*models.Exam, error) {
 	collection := m.mgoClient.Database("uji").Collection("exams")
 

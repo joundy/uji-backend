@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	FetchG(*models.Filter) ([]*models.ExamG, error)
 	GetByID(i primitive.ObjectID) (*models.Exam, error)
+	Create(*models.Exam) (*models.ResID, error)
 }

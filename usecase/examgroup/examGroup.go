@@ -14,6 +14,15 @@ func NewExamGroupUsecase(cR examgroup.Repository) Usecase {
 	return &examGroupUsecase{cR}
 }
 
+func (c *examGroupUsecase) Create(eG *models.ExamGroup) (*models.ResID, error) {
+	resID, err := c.cRepository.Create(eG)
+	if err != nil {
+		return nil, err
+	}
+
+	return resID, nil
+}
+
 func (c *examGroupUsecase) FetchG(mF *models.Filter) ([]*models.ExamGroupG, error) {
 	examGroupGs, err := c.cRepository.FetchG(mF)
 

@@ -7,4 +7,5 @@ import (
 //Repository represent course repository contract
 type Repository interface {
 	FetchG(*models.Filter) ([]*models.ExamGroupG, error)
+	Create(*models.ExamGroup) (*models.ResID, error)
 }
