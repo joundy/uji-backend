@@ -18,6 +18,21 @@ func NewMongoQuestionRepository(c *mongo.Client) Repository {
 	return &mongoQuestionRepository{c}
 }
 
+func (m *mongoQuestionRepository) Create(q *models.Question) (*models.ResID, error) {
+	collection := m.mgoClient.Database("uji").Collection("questions")
+
+	_, err := collection.InsertOne(context.Background(), q)
+	if err != nil {
+		return nil, err
+	}
+
+	resID := models.ResID{
+		ID: q.ID,
+	}
+
+	return &resID, nil
+}
+
 func (m *mongoQuestionRepository) FetchG(mF *models.Filter) ([]*models.QuestionG, error) {
 	collection := m.mgoClient.Database("uji").Collection("questions")
 	var questionGs []*models.QuestionG

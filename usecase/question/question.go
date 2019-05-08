@@ -9,18 +9,16 @@ type questionUsecase struct {
 	qRepository question.Repository
 }
 
-//NewExamUsecase represent initializatin courseUsecase
+//NewQuestionUsecase represent initializatin NewQuestionUsecase
 func NewQuestionUsecase(eR question.Repository) Usecase {
 	return &questionUsecase{eR}
 }
 
-func (eU *questionUsecase) Create(e *models.Question) (*models.ResID, error) {
-	// resID, err := eU.eRepository.Create(e)
-	// if err != nil {
-	// 	return nil, err
-	// }
+func (qU *questionUsecase) Create(q *models.Question) (*models.ResID, error) {
+	resID, err := qU.qRepository.Create(q)
+	if err != nil {
+		return nil, err
+	}
 
-	// return resID, nil
-
-	return nil, nil
+	return resID, nil
 }
