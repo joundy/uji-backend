@@ -26,6 +26,7 @@ import (
 	_examUsecase "github.com/haffjjj/uji-backend/usecase/exam"
 	_examGroupUsecase "github.com/haffjjj/uji-backend/usecase/examgroup"
 	_examLogUsecase "github.com/haffjjj/uji-backend/usecase/examlog"
+	_fileUsecase "github.com/haffjjj/uji-backend/usecase/file"
 	_questionUsecase "github.com/haffjjj/uji-backend/usecase/question"
 )
 
@@ -80,6 +81,7 @@ func main() {
 	questionUsecase := _questionUsecase.NewQuestionUsecase(questionRepo)
 	examLogUsecase := _examLogUsecase.NewExamLogUsecase(examLogRepo, examRepo, questionRepo)
 	authUsecase := _authUsecase.NewAuthUsecase(userRepo)
+	fileUsecase := _fileUsecase.NewFileUsecase()
 
 	_httpDelivery.NewCourseHandler(e, courseUsecase)
 	_httpDelivery.NewExamGroupHandler(e, examGroupUsecase)
@@ -87,6 +89,7 @@ func main() {
 	_httpDelivery.NewQuestionHandler(e, questionUsecase)
 	_httpDelivery.NewExamLogHandler(e, examLogUsecase)
 	_httpDelivery.NewAuthHandler(e, authUsecase)
+	_httpDelivery.NewFileHandler(e, fileUsecase)
 
 	// ===========
 
