@@ -7,4 +7,5 @@ import (
 //Usecase represent course usecase contract
 type Usecase interface {
 	Create(*models.Question) (*models.ResID, error)
+	FetchG(*models.Filter) ([]*models.QuestionG, error)
 }

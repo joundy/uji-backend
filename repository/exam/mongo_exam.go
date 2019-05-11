@@ -110,6 +110,11 @@ func (m *mongoExamRepository) FetchG(mF *models.Filter) ([]*models.ExamG, error)
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
+		bson.D{
+			{"$sort", bson.D{
+				{"_id", -1},
+			}},
+		},
 		fBExamGroupId,
 		bson.D{
 			{"$lookup", bson.D{

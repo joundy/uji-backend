@@ -22,3 +22,12 @@ func (qU *questionUsecase) Create(q *models.Question) (*models.ResID, error) {
 
 	return resID, nil
 }
+
+func (qU *questionUsecase) FetchG(f *models.Filter) ([]*models.QuestionG, error) {
+	questionGs, err := qU.qRepository.FetchG(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return questionGs, nil
+}

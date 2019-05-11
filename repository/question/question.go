@@ -39,8 +39,8 @@ func (m *mongoQuestionRepository) FetchG(mF *models.Filter) ([]*models.QuestionG
 	var zHex primitive.ObjectID
 
 	fBExamId := bson.D{{"$match", bson.D{}}}
-	if mF.ExamGroupID != zHex {
-		fBExamId = bson.D{{"$match", bson.D{{"examGroupId", mF.ExamID}}}}
+	if mF.ExamID != zHex {
+		fBExamId = bson.D{{"$match", bson.D{{"examId", mF.ExamID}}}}
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{

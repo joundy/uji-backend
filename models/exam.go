@@ -14,7 +14,7 @@ type Exam struct {
 	Slug         string             `json:"slug" bson:"slug"`
 	Duration     int                `json:"duration" bson:"duration"`
 	Source       string             `json:"source" bson:"source"`
-	IsRandom     bool               `json:"-" bson:"isRandom"`
+	IsRandom     bool               `json:"isRandom" bson:"isRandom"`
 	MaxQuestion  int                `json:"maxQuestion" bson:"maxQuestion"`
 	Point        int                `json:"point" bson:"point"`
 	PassingGrade int                `json:"passingGrade" bson:"passingGrade"`
