@@ -44,6 +44,11 @@ func (m *mongoQuestionRepository) FetchG(mF *models.Filter) ([]*models.QuestionG
 	}
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
+		bson.D{
+			{"$sort", bson.D{
+				{"_id", -1},
+			}},
+		},
 		fBExamId,
 		bson.D{
 			{"$group", bson.D{
