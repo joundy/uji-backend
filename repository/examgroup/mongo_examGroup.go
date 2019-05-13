@@ -5,6 +5,7 @@ import (
 
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
@@ -15,6 +16,53 @@ type mongoExamGroupRepository struct {
 //NewMongoExamGroupRepository represent initialization mongoCourseRepository
 func NewMongoExamGroupRepository(c *mongo.Client) Repository {
 	return &mongoExamGroupRepository{c}
+}
+
+func (m *mongoExamGroupRepository) GetByID(ID *primitive.ObjectID) (*models.ExamGroup, error) {
+	collection := m.mgoClient.Database("uji").Collection("examGroups")
+
+	var examGroup models.ExamGroup
+
+	err := collection.FindOne(context.TODO(), bson.D{{"_id", ID}}).Decode(&examGroup)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &examGroup, nil
+}
+
+func (m *mongoExamGroupRepository) UpdateByID(ID *primitive.ObjectID, examGroup *models.ExamGroup) error {
+	collection := m.mgoClient.Database("uji").Collection("examGroups")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", ID},
+	}, bson.D{
+		{"$set", examGroup},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mongoExamGroupRepository) DeleteByID(ID *primitive.ObjectID) error {
+	collection := m.mgoClient.Database("uji").Collection("examGroups")
+
+	_, err := collection.DeleteOne(
+		context.Background(),
+		bson.D{
+			{"_id", ID},
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (m *mongoExamGroupRepository) Create(eG *models.ExamGroup) (*models.ResID, error) {

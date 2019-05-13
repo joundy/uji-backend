@@ -224,11 +224,12 @@ func (c *examLogUsecase) FetchG(userIDHex *primitive.ObjectID, mF *models.Filter
 }
 
 func shuffleQuestions(q *[]models.Question) {
-	rand.Seed(time.Now().UnixNano())
+	if len(*q) > 1 {
+		rand.Seed(time.Now().UnixNano())
+		for i := len(*q) - 1; i >= 0; i-- {
+			r := rand.Intn(len(*q) - 1)
 
-	for i := len(*q) - 1; i >= 0; i-- {
-		r := rand.Intn(len(*q) - 1)
-
-		(*q)[i], (*q)[r] = (*q)[r], (*q)[i]
+			(*q)[i], (*q)[r] = (*q)[r], (*q)[i]
+		}
 	}
 }
