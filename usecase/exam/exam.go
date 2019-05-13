@@ -3,6 +3,7 @@ package exam
 import (
 	"github.com/haffjjj/uji-backend/models"
 	"github.com/haffjjj/uji-backend/repository/exam"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 type examUsecase struct {
@@ -21,6 +22,33 @@ func (eU *examUsecase) Create(e *models.Exam) (*models.ResID, error) {
 	}
 
 	return resID, nil
+}
+
+func (eU *examUsecase) GetByID(ID *primitive.ObjectID) (*models.Exam, error) {
+	exam, err := eU.eRepository.GetByID(ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return exam, nil
+}
+
+func (eU *examUsecase) UpdateByID(ID *primitive.ObjectID, exam *models.Exam) error {
+	err := eU.eRepository.UpdateByID(ID, exam)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (eU *examUsecase) DeleteByID(ID *primitive.ObjectID) error {
+	err := eU.eRepository.DeleteByID(ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (eU *examUsecase) FetchG(mF *models.Filter) ([]*models.ExamG, error) {

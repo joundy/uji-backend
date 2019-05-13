@@ -34,18 +34,43 @@ func (m *mongoExamRepository) Create(e *models.Exam) (*models.ResID, error) {
 	return &resID, nil
 }
 
-func (m *mongoExamRepository) GetByID(i primitive.ObjectID) (*models.Exam, error) {
+func (m *mongoExamRepository) UpdateByID(ID *primitive.ObjectID, exam *models.Exam) error {
+	collection := m.mgoClient.Database("uji").Collection("exams")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", ID},
+	}, bson.D{
+		{"$set", exam},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mongoExamRepository) DeleteByID(ID *primitive.ObjectID) error {
+	collection := m.mgoClient.Database("uji").Collection("exams")
+
+	_, err := collection.DeleteOne(
+		context.Background(),
+		bson.D{
+			{"_id", ID},
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mongoExamRepository) GetByID(i *primitive.ObjectID) (*models.Exam, error) {
 	collection := m.mgoClient.Database("uji").Collection("exams")
 
 	var exams []*models.Exam
-
-	// var exam models.Exam
-
-	// err := collection.FindOne(context.TODO(), bson.D{{"_id", i}}).Decode(&exam)
-
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	cur, err := collection.Aggregate(context.TODO(), mongo.Pipeline{
 		bson.D{{"$match", bson.D{{"_id", i}}}},

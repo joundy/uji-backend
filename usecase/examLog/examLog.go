@@ -162,7 +162,7 @@ func (c *examLogUsecase) GetByIDAndStart(IDHex, userIDHex *primitive.ObjectID) (
 
 func (c *examLogUsecase) Generate(userIDHex, examIDHex primitive.ObjectID) (*models.ResID, error) {
 
-	exam, err := c.eRepository.GetByID(examIDHex)
+	exam, err := c.eRepository.GetByID(&examIDHex)
 	if err != nil {
 		return nil, err
 	}

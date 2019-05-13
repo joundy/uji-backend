@@ -8,6 +8,8 @@ import (
 //Repository represent course repository contract
 type Repository interface {
 	FetchG(*models.Filter) ([]*models.ExamG, error)
-	GetByID(i primitive.ObjectID) (*models.Exam, error)
+	GetByID(*primitive.ObjectID) (*models.Exam, error)
+	UpdateByID(*primitive.ObjectID, *models.Exam) error
+	DeleteByID(*primitive.ObjectID) error
 	Create(*models.Exam) (*models.ResID, error)
 }
