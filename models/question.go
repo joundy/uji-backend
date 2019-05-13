@@ -7,7 +7,7 @@ import (
 //Question is represent model for Question data
 type Question struct {
 	ID       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	ExamID   primitive.ObjectID `json:"examId" bson:"examId"`
+	ExamID   primitive.ObjectID `json:"examId" bson:"examId,omitempty"`
 	Title    string             `json:"title" bson:"title"`
 	Answer   Answer             `json:"answer" bson:"answer"`
 	IsMarked bool               `json:"isMarked" bson:"isMarked"`
@@ -21,7 +21,7 @@ type Answer struct {
 
 //AnswerList is represent model for AnswerList data
 type AnswerList struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Title     string             `json:"title" bson:"title"`
 	IsCorrect bool               `json:"isCorrect" bson:"isCorrect"`
 }

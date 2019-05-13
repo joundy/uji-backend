@@ -18,6 +18,53 @@ func NewMongoQuestionRepository(c *mongo.Client) Repository {
 	return &mongoQuestionRepository{c}
 }
 
+func (m *mongoQuestionRepository) GetByID(ID *primitive.ObjectID) (*models.Question, error) {
+	collection := m.mgoClient.Database("uji").Collection("questions")
+
+	var question models.Question
+
+	err := collection.FindOne(context.TODO(), bson.D{{"_id", ID}}).Decode(&question)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &question, nil
+}
+
+func (m *mongoQuestionRepository) UpdateByID(ID *primitive.ObjectID, question *models.Question) error {
+	collection := m.mgoClient.Database("uji").Collection("questions")
+
+	_, err := collection.UpdateOne(context.TODO(), bson.D{
+		{"_id", ID},
+	}, bson.D{
+		{"$set", question},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *mongoQuestionRepository) DeleteByID(ID *primitive.ObjectID) error {
+	collection := m.mgoClient.Database("uji").Collection("questions")
+
+	_, err := collection.DeleteOne(
+		context.Background(),
+		bson.D{
+			{"_id", ID},
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *mongoQuestionRepository) Create(q *models.Question) (*models.ResID, error) {
 	collection := m.mgoClient.Database("uji").Collection("questions")
 

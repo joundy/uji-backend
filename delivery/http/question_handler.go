@@ -23,6 +23,63 @@ func NewQuestionHandler(e *echo.Echo, qU question.Usecase) {
 
 	c.POST("", handler.Create)
 	c.GET("", handler.FetchG)
+	c.GET("/:id", handler.GetByID)
+	c.PUT("/:id", handler.UpdateByID)
+	c.DELETE("/:id", handler.DeleteByID)
+}
+
+func (qH *questionHandler) GetByID(eC echo.Context) error {
+	IDP := eC.Param("id")
+	ID, err := primitive.ObjectIDFromHex(IDP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	question, err := qH.qUsecase.GetByID(&ID)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusOK, question)
+}
+
+func (qH *questionHandler) UpdateByID(eC echo.Context) error {
+	var question models.Question
+	eC.Bind(&question)
+
+	IDP := eC.Param("id")
+	ID, err := primitive.ObjectIDFromHex(IDP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	for i := range question.Answer.List {
+		question.Answer.List[i].ID = primitive.NewObjectID()
+	}
+
+	question.Answer.SelectedIds = []primitive.ObjectID{}
+
+	err = qH.qUsecase.UpdateByID(&ID, &question)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusNoContent, "")
+}
+
+func (qH *questionHandler) DeleteByID(eC echo.Context) error {
+	IDP := eC.Param("id")
+	ID, err := primitive.ObjectIDFromHex(IDP)
+	if err != nil {
+		return eC.JSON(http.StatusBadRequest, models.ResponseError{Message: err.Error()})
+	}
+
+	err = qH.qUsecase.DeleteByID(&ID)
+	if err != nil {
+		return eC.JSON(http.StatusInternalServerError, models.ResponseError{Message: err.Error()})
+	}
+
+	return eC.JSON(http.StatusNoContent, "")
 }
 
 func (qH *questionHandler) Create(eC echo.Context) error {
